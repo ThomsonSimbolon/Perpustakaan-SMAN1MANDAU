@@ -308,6 +308,258 @@ Jika sistem sudah memiliki data anggota existing yang belum di-link dengan user:
 
 ## 📊 Flow Bisnis Sistem
 
+### Diagram Flowchart Sistem
+
+#### Flowchart Utama: Login dan Routing
+
+```mermaid
+flowchart TD
+    Start([User Mengakses Aplikasi]) --> LoginPage[Halaman Login]
+    LoginPage --> InputData{Input Username & Password}
+    InputData --> Validate{Sistem Validasi}
+    Validate -->|Valid| CheckRole{Cek Role User}
+    Validate -->|Tidak Valid| ErrorMsg[Pesan Error]
+    ErrorMsg --> LoginPage
+
+    CheckRole -->|Admin| AdminDash[Admin Dashboard]
+    CheckRole -->|Pustakawan| PustakawanDash[Pustakawan Dashboard]
+    CheckRole -->|Siswa| KatalogPage[Katalog Buku]
+    CheckRole -->|Guru| KatalogPage
+
+    AdminDash --> AdminMenu[Menu Admin]
+    PustakawanDash --> PustakawanMenu[Menu Pustakawan]
+    KatalogPage --> SiswaGuruMenu[Menu Siswa/Guru]
+
+    AdminMenu --> End1([Selesai])
+    PustakawanMenu --> End2([Selesai])
+    SiswaGuruMenu --> End3([Selesai])
+```
+
+#### Flowchart Admin: Kelola User
+
+```mermaid
+flowchart TD
+    Start([Admin Login]) --> Dashboard[Admin Dashboard]
+    Dashboard --> Menu{Menu Pilihan}
+
+    Menu -->|Kelola User| UserPage[Halaman Kelola User]
+    UserPage --> Action{Aksi yang Dipilih}
+
+    Action -->|Tambah User| AddForm[Form Tambah User]
+    AddForm --> InputAdd[Input: Username, Password, Role]
+    InputAdd --> ValidateAdd{Validasi Username Unique}
+    ValidateAdd -->|Valid| HashPass[Hash Password dengan password_hash]
+    ValidateAdd -->|Tidak Valid| ErrorAdd[Error: Username sudah digunakan]
+    ErrorAdd --> AddForm
+    HashPass --> SaveAdd[Simpan User Baru]
+    SaveAdd --> SuccessAdd[Pesan Sukses]
+    SuccessAdd --> UserPage
+
+    Action -->|Edit User| EditForm[Form Edit User]
+    EditForm --> InputEdit[Input: Username, Role, Password opsional]
+    InputEdit --> CheckPass{Password Diisi?}
+    CheckPass -->|Ya| HashPassEdit[Hash Password Baru]
+    CheckPass -->|Tidak| SkipPass[Skip Password]
+    HashPassEdit --> UpdateUser[Update Data User]
+    SkipPass --> UpdateUser
+    UpdateUser --> SuccessEdit[Pesan Sukses]
+    SuccessEdit --> UserPage
+
+    Action -->|Hapus User| ConfirmDel{Konfirmasi Hapus}
+    ConfirmDel -->|Ya| DeleteUser[Hapus User dari Database]
+    ConfirmDel -->|Tidak| UserPage
+    DeleteUser --> SuccessDel[Pesan Sukses]
+    SuccessDel --> UserPage
+
+    UserPage --> Dashboard
+```
+
+#### Flowchart Pustakawan: Manajemen Buku
+
+```mermaid
+flowchart TD
+    Start([Pustakawan Login]) --> Dashboard[Pustakawan Dashboard]
+    Dashboard --> Menu{Menu Pilihan}
+
+    Menu -->|Data Buku| BukuPage[Halaman Data Buku]
+    BukuPage --> Action{Aksi yang Dipilih}
+
+    Action -->|Tambah Buku| AddBuku[Form Tambah Buku]
+    AddBuku --> InputBuku[Input: Kode, Judul, Pengarang, Penerbit, Tahun, Status]
+    InputBuku --> ValidateKode{Validasi Kode Unik}
+    ValidateKode -->|Valid| SaveBuku[Simpan Buku]
+    ValidateKode -->|Tidak Valid| ErrorKode[Error: Kode sudah digunakan]
+    ErrorKode --> AddBuku
+    SaveBuku --> SuccessBuku[Pesan Sukses]
+    SuccessBuku --> BukuPage
+
+    Action -->|Edit Buku| EditBuku[Form Edit Buku]
+    EditBuku --> UpdateBuku[Update Data Buku]
+    UpdateBuku --> SuccessEditBuku[Pesan Sukses]
+    SuccessEditBuku --> BukuPage
+
+    Action -->|Hapus Buku| CheckStatus{Cek Status Buku}
+    CheckStatus -->|DIPINJAM| ErrorHapus[Error: Buku sedang dipinjam]
+    CheckStatus -->|TERSEDIA| ConfirmHapus{Konfirmasi Hapus}
+    ErrorHapus --> BukuPage
+    ConfirmHapus -->|Ya| DeleteBuku[Hapus Buku]
+    ConfirmHapus -->|Tidak| BukuPage
+    DeleteBuku --> SuccessHapus[Pesan Sukses]
+    SuccessHapus --> BukuPage
+
+    BukuPage --> Dashboard
+```
+
+#### Flowchart Pustakawan: Peminjaman Buku
+
+```mermaid
+flowchart TD
+    Start([Pustakawan Login]) --> Dashboard[Pustakawan Dashboard]
+    Dashboard --> PeminjamanPage[Halaman Peminjaman]
+    PeminjamanPage --> TambahBaru[Klik Peminjaman Baru]
+    TambahBaru --> FormPeminjaman[Form Peminjaman]
+    FormPeminjaman --> InputData[Input: Pilih Anggota, Pilih Buku]
+    InputData --> Validate{Validasi Data}
+
+    Validate -->|Anggota Valid & Buku TERSEDIA| SavePeminjaman[Simpan Data Peminjaman]
+    Validate -->|Buku DIPINJAM| ErrorBuku[Error: Buku tidak tersedia]
+    Validate -->|Anggota Tidak Valid| ErrorAnggota[Error: Anggota tidak valid]
+    ErrorBuku --> FormPeminjaman
+    ErrorAnggota --> FormPeminjaman
+
+    SavePeminjaman --> SetTanggal[Set: Tanggal Pinjam = Hari Ini<br/>Tanggal Kembali = +7 Hari<br/>Status = AKTIF]
+    SetTanggal --> GenerateQR[Generate QR Code<br/>Format: ID_PINJAM:x|ID_ANGGOTA:y|KODE_BUKU:z]
+    GenerateQR --> SaveQR[Simpan QR Code sebagai PNG<br/>di assets/img/qr_codes/]
+    SaveQR --> UpdateStatus[Update Status Buku = DIPINJAM]
+    UpdateStatus --> DisplayQR[Tampilkan QR Code di UI]
+    DisplayQR --> Success[Pesan Sukses]
+    Success --> PeminjamanPage
+
+    PeminjamanPage --> Dashboard
+```
+
+#### Flowchart Pustakawan: Pengembalian Buku
+
+```mermaid
+flowchart TD
+    Start([Pustakawan Login]) --> Dashboard[Pustakawan Dashboard]
+    Dashboard --> PengembalianPage[Halaman Pengembalian]
+    PengembalianPage --> Method{Metode Input}
+
+    Method -->|Scan dengan Kamera| CameraTab[Tab Scan dengan Kamera]
+    CameraTab --> AccessCamera[Akses Kamera Device]
+    AccessCamera --> ScanQR[Scan QR Code]
+    ScanQR --> ReadQR[Sistem Baca Data QR Code]
+
+    Method -->|Input Manual| ManualTab[Tab Input Manual]
+    ManualTab --> InputQR[Input Data QR Code Manual<br/>Format: ID_PINJAM:x|ID_ANGGOTA:y|KODE_BUKU:z]
+    InputQR --> ReadQR
+
+    ReadQR --> ValidateQR{Validasi QR Code}
+    ValidateQR -->|Valid| CheckStatus{Cek Status Peminjaman}
+    ValidateQR -->|Tidak Valid| ErrorQR[Error: QR Code tidak valid]
+    ErrorQR --> PengembalianPage
+
+    CheckStatus -->|Status = AKTIF| ShowDetail[Tampilkan Detail Peminjaman:<br/>- ID Peminjaman<br/>- Data Anggota<br/>- Data Buku<br/>- Tanggal Pinjam<br/>- Tanggal Harus Kembali<br/>- Potensi Denda]
+    CheckStatus -->|Status = SELESAI| ErrorStatus[Error: Transaksi sudah selesai]
+    ErrorStatus --> PengembalianPage
+
+    ShowDetail --> CalculateDenda{Hitung Denda<br/>jika terlambat}
+    CalculateDenda -->|Terlambat| Denda[Rp 1.000/hari]
+    CalculateDenda -->|Tepat Waktu| NoDenda[Denda = 0]
+    Denda --> Selesaikan[Klik Selesaikan Pengembalian]
+    NoDenda --> Selesaikan
+
+    Selesaikan --> UpdateData[Update Data:<br/>- Tanggal Kembali = Hari Ini<br/>- Status Peminjaman = SELESAI<br/>- Status Buku = TERSEDIA]
+    UpdateData --> SavePengembalian[Simpan Data Pengembalian]
+    SavePengembalian --> Success[Pesan Sukses]
+    Success --> PengembalianPage
+
+    PengembalianPage --> Dashboard
+```
+
+#### Flowchart Siswa/Guru: Katalog dan Profil
+
+```mermaid
+flowchart TD
+    Start([Siswa/Guru Login]) --> KatalogPage[Katalog Buku]
+    KatalogPage --> Menu{Menu Pilihan}
+
+    Menu -->|Katalog| ViewKatalog[Lihat Katalog Buku]
+    ViewKatalog --> DisplayBooks[Display: Card Grid Buku<br/>- Judul, Pengarang, Penerbit<br/>- Tahun, Status Badge]
+    DisplayBooks --> Stats[Statistik:<br/>- Total Buku<br/>- Buku Tersedia<br/>- Buku Dipinjam]
+    Stats --> Search{Ingin Mencari Buku?}
+
+    Search -->|Ya| SearchForm[Form Pencarian]
+    SearchForm --> InputKeyword[Input Keyword]
+    InputKeyword --> SelectType{Pilih: Judul atau Pengarang}
+    SelectType --> SearchBtn[Klik Cari]
+    SearchBtn --> SearchResult[Hasil Pencarian]
+    SearchResult --> ViewKatalog
+
+    Search -->|Tidak| ViewKatalog
+
+    Menu -->|Profile| ProfilePage[Halaman Profil]
+    ProfilePage --> CheckData{Data Anggota Ada?}
+
+    CheckData -->|Ada| DisplayProfile[Display Profil Lengkap:<br/>- Informasi Dasar<br/>- Kontak<br/>- Status Akun]
+    CheckData -->|Tidak Ada| EmptyState[Pesan: Data diri belum lengkap<br/>Hubungi pustakawan]
+
+    DisplayProfile --> BackKatalog[Klik Kembali ke Katalog]
+    EmptyState --> BackKatalog
+    BackKatalog --> KatalogPage
+
+    ViewKatalog --> End([Selesai])
+    ProfilePage --> End
+```
+
+#### Flowchart Lengkap: Sistem Perpustakaan
+
+```mermaid
+flowchart TB
+    Start([Akses Aplikasi]) --> Login[Login Page]
+    Login --> Auth{Autentikasi}
+    Auth -->|Berhasil| RoleCheck{Cek Role}
+    Auth -->|Gagal| Login
+
+    RoleCheck -->|Admin| AdminFlow[Admin Flow]
+    RoleCheck -->|Pustakawan| PustakawanFlow[Pustakawan Flow]
+    RoleCheck -->|Siswa/Guru| SiswaGuruFlow[Siswa/Guru Flow]
+
+    AdminFlow --> AdminMenu[Menu Admin:<br/>- Dashboard<br/>- Kelola User<br/>- Logout]
+    AdminMenu --> ManageUser[Kelola User:<br/>Tambah/Edit/Hapus]
+    ManageUser --> AdminMenu
+
+    PustakawanFlow --> PustakawanMenu[Menu Pustakawan:<br/>- Dashboard<br/>- Data Buku<br/>- Data Anggota<br/>- Peminjaman<br/>- Pengembalian<br/>- Laporan]
+
+    PustakawanMenu --> ManageBuku[Manajemen Buku]
+    PustakawanMenu --> ManageAnggota[Manajemen Anggota]
+    PustakawanMenu --> Peminjaman[Peminjaman:<br/>Generate QR Code]
+    PustakawanMenu --> Pengembalian[Pengembalian:<br/>Scan QR Code]
+    PustakawanMenu --> Laporan[Laporan:<br/>Cetak Laporan]
+
+    ManageBuku --> PustakawanMenu
+    ManageAnggota --> PustakawanMenu
+    Peminjaman --> UpdateBukuStatus[Update Status Buku = DIPINJAM]
+    UpdateBukuStatus --> PustakawanMenu
+    Pengembalian --> UpdateBukuStatus2[Update Status Buku = TERSEDIA]
+    UpdateBukuStatus2 --> PustakawanMenu
+    Laporan --> PustakawanMenu
+
+    SiswaGuruFlow --> Katalog[Katalog Buku:<br/>- Lihat Katalog<br/>- Pencarian Buku<br/>- Cek Ketersediaan]
+    SiswaGuruFlow --> Profile[Profil Pengguna:<br/>- Lihat Data Diri]
+
+    Katalog --> SiswaGuruMenu[Menu Siswa/Guru]
+    Profile --> SiswaGuruMenu
+    SiswaGuruMenu --> Katalog
+    SiswaGuruMenu --> Profile
+
+    AdminMenu --> Logout[Logout]
+    PustakawanMenu --> Logout
+    SiswaGuruMenu --> Logout
+    Logout --> Login
+```
+
 ### Flow 1: Login
 
 ```
@@ -470,6 +722,94 @@ Jika sistem sudah memiliki data anggota existing yang belum di-link dengan user:
       - Denda
       - Total denda
 5. Klik "Cetak Laporan" untuk print
+```
+
+### Flow 8: Kelola User (Admin)
+
+```
+1. Admin login
+2. Pilih menu "Kelola User"
+3. Tambah/Edit/Hapus User:
+
+   A. Tambah User Baru:
+      - Klik "Tambah Pengguna"
+      - Input: Username (wajib, unique)
+      - Input: Password (wajib)
+      - Pilih: Role (admin, pustakawan, siswa, guru)
+      - Sistem hash password menggunakan password_hash()
+      - Sistem validasi username unique
+      - Sistem simpan user baru
+
+   B. Edit User:
+      - Klik "Edit" pada user yang ingin diubah
+      - Ubah: Username, Role
+      - Password (opsional - kosongkan jika tidak diubah)
+      - Jika password diisi, sistem hash password baru
+      - Sistem update data user
+
+   C. Hapus User:
+      - Klik "Hapus" pada user yang ingin dihapus
+      - Konfirmasi penghapusan
+      - Sistem hapus user dari database
+4. Sistem menampilkan daftar semua user dengan role masing-masing
+```
+
+### Flow 9: Profil Pengguna (Siswa/Guru)
+
+```
+1. Siswa/Guru login
+2. Sistem redirect ke /katalog/index.php
+3. Klik menu "Profile" di sidebar
+4. Sistem menampilkan halaman profil:
+   - Informasi Dasar:
+     * Nama Lengkap
+     * Username
+     * NIS (untuk siswa) / NIP (untuk guru)
+     * Kelas & Jurusan (untuk siswa)
+     * Mata Pelajaran (untuk guru)
+     * Jenis Kelamin
+   - Kontak:
+     * No. HP
+     * Email
+   - Status Akun:
+     * Status Aktif (AKTIF/NONAKTIF)
+5. Jika data anggota belum lengkap:
+   - Sistem menampilkan pesan "Data diri belum lengkap"
+   - User perlu menghubungi pustakawan untuk mengisi data
+6. User dapat kembali ke katalog dengan klik "Kembali ke Katalog"
+```
+
+### Flow 10: Sidebar Responsive (Mobile/Tablet)
+
+```
+1. User mengakses aplikasi di mobile/tablet (≤1024px)
+   → Sidebar tersembunyi secara default (left: -250px)
+   → Main content full width
+   → Header full width dengan hamburger menu icon
+
+2. User klik hamburger menu di header
+   → JavaScript deteksi: isMobileOrTablet() = true
+   → Fungsi toggleSidebarResponsive() dipanggil
+   → Sidebar muncul dari kiri (left: 0) dengan animasi slide-in
+   → Overlay muncul dengan backdrop blur
+   → Body scroll di-disable untuk mencegah scroll background
+
+3. User berinteraksi dengan sidebar:
+   - Klik menu item → Navigasi ke halaman, sidebar tetap terbuka
+   - Klik close button (X) → Sidebar tertutup
+   - Klik overlay (area gelap) → Sidebar tertutup
+
+4. User resize window ke desktop (>1024px)
+   → JavaScript deteksi: isMobileOrTablet() = false
+   → Sidebar responsive auto-close jika terbuka
+   → Kembali ke behavior desktop (collapse/expand)
+   → State collapse disimpan di localStorage
+
+5. Desktop behavior (>1024px):
+   - Sidebar tetap terlihat di kiri
+   - Toggle button untuk collapse/expand
+   - State collapse disimpan di localStorage
+   - Main content menyesuaikan margin-left
 ```
 
 ---
@@ -912,6 +1252,83 @@ Sistem menggunakan **Font Awesome 5** untuk icons:
 
 - Home, Users, Book, User Plus, Arrow Up/Down, File Text, Log Out, Search, Plus, Edit, Trash, Print, QR Code, Camera
 
+### Responsive Design
+
+Sistem mendukung tampilan responsive untuk desktop, tablet, dan mobile dengan breakpoint berikut:
+
+#### Breakpoint
+
+- **Desktop:** > 1024px
+
+  - Sidebar tetap terlihat di kiri
+  - Sidebar dapat di-collapse/expand
+  - Header full width dengan semua elemen terlihat
+
+- **Tablet:** ≤ 1024px
+
+  - Sidebar tersembunyi secara default
+  - Sidebar muncul dengan overlay saat toggle
+  - Header full width dengan spacing yang disesuaikan
+  - User info text tetap terlihat dengan ukuran lebih kecil
+
+- **Mobile:** ≤ 768px
+
+  - Sidebar tersembunyi secara default
+  - Sidebar muncul full-width (300px, max 85vw) dengan overlay
+  - Header compact dengan spacing optimal
+  - User info text tetap terlihat dengan ukuran lebih kecil
+  - Icon button dengan ukuran minimum 40px untuk touch target
+
+- **Small Mobile:** ≤ 480px
+  - Optimasi spacing dan ukuran elemen
+  - Header lebih compact (52px height)
+  - Icon button dengan ukuran minimum 36px
+
+#### Sidebar Responsive Behavior
+
+**Desktop (> 1024px):**
+
+- Sidebar fixed di kiri dengan width 250px
+- Dapat di-collapse menjadi 70px
+- State collapse disimpan di localStorage
+- Main content menyesuaikan margin-left
+
+**Mobile/Tablet (≤ 1024px):**
+
+- Sidebar tersembunyi secara default (left: -250px)
+- Muncul saat toggle dengan animasi slide-in dari kiri
+- Overlay dengan backdrop blur muncul saat sidebar aktif
+- Body scroll di-disable saat sidebar terbuka
+- Close button muncul di sidebar header
+- Auto-close saat resize ke desktop
+
+#### Header Responsive Behavior
+
+**Desktop (> 1024px):**
+
+- Header full width dengan semua elemen terlihat
+- User info (username dan role) terlihat lengkap
+- Spacing normal
+
+**Tablet (≤ 1024px):**
+
+- Header full width dengan padding disesuaikan
+- User info tetap terlihat dengan font size lebih kecil
+- Gap antara icon disesuaikan
+
+**Mobile (≤ 768px):**
+
+- Header height: 56px (dari 60px)
+- Padding: 0 12px
+- User info tetap terlihat dengan font size lebih kecil
+- Icon button: 40px x 40px minimum
+
+**Small Mobile (≤ 480px):**
+
+- Header height: 52px
+- Padding: 0 10px
+- Icon button: 36px x 36px minimum
+
 ---
 
 ## 📝 Catatan Penting
@@ -1036,6 +1453,106 @@ Jika terdapat user lama dengan password plain text, sistem tidak akan bisa login
 
 ## 📋 Changelog
 
+### Versi 1.3 - Desember 2025
+
+#### 📱 Implementasi Sidebar Responsive untuk Admin dan Pustakawan
+
+**Perubahan Utama:**
+
+- ✅ **Sidebar Responsive:** Admin dan pustakawan sekarang memiliki sidebar responsive seperti siswa/guru
+- ✅ **Mobile/Tablet Support:** Sidebar tersembunyi secara default di mobile/tablet dan muncul dengan overlay saat toggle
+- ✅ **Header Responsive:** Header/navbar sekarang fully responsive untuk desktop, tablet, dan mobile
+- ✅ **Icon Logout:** Icon logout menggunakan Font Awesome langsung untuk konsistensi
+- ✅ **UI/UX Improvements:** Perbaikan tampilan sidebar di mobile/tablet tanpa mengubah desktop
+
+**File yang Diubah:**
+
+1. **`config/database.php`**
+
+   - Menambahkan class `sidebar-responsive` pada sidebar
+   - Menambahkan close button di sidebar header
+   - Menambahkan sidebar overlay element
+   - Mengganti icon logout dari `icon-log-out` ke `fas fa-sign-out-alt`
+
+2. **`assets/css/style.css`**
+
+   - Menambahkan CSS untuk sidebar overlay (`.sidebar-overlay`)
+   - Menambahkan CSS untuk sidebar close button (`.sidebar-close`)
+   - Menambahkan media queries untuk responsive behavior:
+     - Tablet (≤1024px): Sidebar tersembunyi, muncul dengan toggle
+     - Mobile (≤768px): Sidebar full-width dengan overlay
+     - Small Mobile (≤480px): Optimasi untuk layar kecil
+   - Menambahkan CSS responsive untuk header:
+     - Padding dan spacing disesuaikan per breakpoint
+     - User info text tetap terlihat dengan ukuran font yang disesuaikan
+     - Icon button dengan ukuran minimum untuk touch target
+   - Menghilangkan border dan shadow pada sidebar header di mobile/tablet
+   - Menambahkan utility classes untuk icon display
+
+3. **`assets/js/script.js`**
+   - Menambahkan fungsi `openSidebarResponsive()` - buka sidebar dengan overlay
+   - Menambahkan fungsi `closeSidebarResponsive()` - tutup sidebar dan overlay
+   - Menambahkan fungsi `toggleSidebarResponsive()` - toggle sidebar responsive
+   - Menambahkan fungsi `isMobileOrTablet()` - deteksi ukuran layar
+   - Event listeners untuk:
+     - Toggle button (menggunakan responsive di mobile, collapse di desktop)
+     - Close button
+     - Overlay click
+   - Handler untuk window resize - auto-close saat resize ke desktop
+   - Inisialisasi sidebar state saat halaman dimuat
+
+**Flow Sidebar Responsive:**
+
+```
+1. User mengakses halaman admin/pustakawan di mobile/tablet (≤1024px)
+   → Sidebar tersembunyi secara default (left: -250px)
+   → Main content full width
+   → Header full width dengan hamburger menu
+
+2. User klik hamburger menu
+   → JavaScript deteksi: isMobileOrTablet() = true
+   → Fungsi toggleSidebarResponsive() dipanggil
+   → Sidebar muncul dari kiri (left: 0) dengan animasi
+   → Overlay muncul dengan backdrop blur
+   → Body scroll di-disable
+
+3. User klik close button atau overlay
+   → Fungsi closeSidebarResponsive() dipanggil
+   → Sidebar tersembunyi kembali (left: -250px)
+   → Overlay hilang
+   → Body scroll di-enable kembali
+
+4. User resize window ke desktop (>1024px)
+   → JavaScript deteksi: isMobileOrTablet() = false
+   → Sidebar responsive auto-close jika terbuka
+   → Kembali ke behavior desktop (collapse/expand)
+```
+
+**Dampak Perubahan:**
+
+- ✅ **Konsistensi UI:** Semua role (admin, pustakawan, siswa, guru) sekarang memiliki sidebar responsive yang konsisten
+- ✅ **Mobile Experience:** Pengalaman pengguna lebih baik di mobile/tablet dengan sidebar yang bisa disembunyikan
+- ✅ **Desktop Unchanged:** Tampilan desktop tetap sama seperti sebelumnya (collapse/expand behavior)
+- ✅ **Touch Friendly:** Icon button dengan ukuran minimum 36-40px untuk touch target yang optimal
+- ✅ **Performance:** Smooth animation dengan CSS transitions
+
+**Breakpoint yang Digunakan:**
+
+- **Desktop:** > 1024px - Sidebar tetap terlihat, collapse/expand behavior
+- **Tablet:** ≤ 1024px - Sidebar responsive dengan toggle
+- **Mobile:** ≤ 768px - Sidebar responsive full-width (300px, max 85vw)
+- **Small Mobile:** ≤ 480px - Optimasi spacing dan ukuran elemen
+
+**Catatan Teknis:**
+
+- Sidebar menggunakan `position: fixed` dengan `z-index: 999`
+- Overlay menggunakan `z-index: 998` dengan backdrop blur
+- Animasi menggunakan CSS transitions untuk performa optimal
+- JavaScript menggunakan `window.innerWidth` untuk deteksi ukuran layar
+- State sidebar tidak disimpan di localStorage untuk responsive (hanya untuk desktop collapse)
+
+---
+
 ### Versi 1.1 - Desember 2025
 
 #### 🔒 Perbaikan Keamanan Autentikasi
@@ -1148,6 +1665,6 @@ Library PHP QR Code menggunakan lisensi LGPL 3.0.
 
 ---
 
-**Versi Dokumen:** 1.2  
+**Versi Dokumen:** 1.3  
 **Terakhir Diupdate:** Desember 2025  
-**Perubahan Terakhir:** Implementasi Data Diri Siswa & Guru dengan Halaman Profil
+**Perubahan Terakhir:** Implementasi Sidebar Responsive untuk Admin dan Pustakawan
