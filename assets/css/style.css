@@ -392,7 +392,7 @@ a:hover {
   box-shadow: var(--shadow-sm);
   border-right: 1px solid var(--border-color);
   flex-shrink: 0;
-  transition: width var(--transition-fast);
+  transition: width var(--transition-fast), left var(--transition-fast);
   position: fixed;
   top: 0;
   left: 0;
@@ -402,6 +402,11 @@ a:hover {
   z-index: 999;
 }
 
+/* Sidebar responsive - default hidden on mobile/tablet (will be overridden by media query) */
+.sidebar.sidebar-responsive {
+  /* Default desktop behavior - will be overridden by media query */
+}
+
 .sidebar.sidebar-collapsed {
   width: 70px;
 }
@@ -409,13 +414,14 @@ a:hover {
 .sidebar-header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 10px;
   padding: 0 20px;
   height: 60px;
   border-bottom: 1px solid var(--border-color);
   background-color: var(--bg-sidebar);
   box-shadow: var(--shadow-sm);
+  position: relative;
 }
 
 .sidebar-collapsed .sidebar-header {
@@ -582,6 +588,274 @@ a:hover {
   opacity: 1;
   visibility: visible;
   transform: translateX(0);
+}
+
+/* Sidebar Close Button */
+.sidebar-close {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.2em;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  margin-left: auto;
+}
+
+.sidebar-close:hover {
+  background-color: var(--bg-elevated);
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-fast), visibility var(--transition-fast);
+}
+
+.sidebar-overlay.active {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Sidebar Responsive Behavior - Default: Hidden on mobile/tablet */
+@media (max-width: 1024px) {
+  /* Sidebar tersembunyi secara default di mobile/tablet */
+  .sidebar.sidebar-responsive {
+    left: -250px !important;
+    transition: left var(--transition-fast);
+    z-index: 999;
+    border-right: none; /* Hilangkan border kanan di mobile/tablet */
+  }
+
+  /* Sidebar muncul saat class active ditambahkan */
+  .sidebar.sidebar-responsive.active {
+    left: 0 !important;
+  }
+
+  /* Close button muncul di mobile/tablet */
+  .sidebar-close {
+    display: flex;
+  }
+
+  /* Sidebar header layout - hilangkan semua garis di mobile/tablet */
+  .sidebar-header {
+    justify-content: space-between;
+    border-bottom: none !important; /* Hilangkan garis di atas menu di mobile/tablet */
+    box-shadow: none !important; /* Hilangkan shadow yang mungkin terlihat seperti garis */
+    border: none !important; /* Hilangkan semua border */
+  }
+
+  /* Hilangkan padding top pada nav-links untuk menghilangkan gap yang terlihat seperti garis */
+  .nav-links {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    padding: 0 10px 10px 10px !important; /* Hanya padding kiri, kanan, bawah */
+  }
+
+  /* Pastikan tidak ada border pada nav-item pertama */
+  .nav-links .nav-item:first-child a {
+    border-top: none !important;
+    margin-top: 0 !important;
+  }
+
+  /* Main content full width di mobile/tablet */
+  .main-content {
+    margin-left: 0 !important;
+  }
+
+  /* Header full width di mobile/tablet */
+  .top-header-right {
+    left: 0 !important;
+    padding: 0 15px;
+  }
+
+  /* Header responsive - tablet */
+  .header-right-items {
+    gap: 10px;
+  }
+
+  .user-profile-btn {
+    padding: 5px 8px;
+    gap: 8px;
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .user-info {
+    display: flex; /* Tampilkan user info di tablet */
+  }
+
+  .user-name {
+    font-size: 0.85em;
+  }
+
+  .user-role {
+    font-size: 0.7em;
+  }
+
+  /* Disable collapse behavior on mobile/tablet - tetap full width */
+  .sidebar.sidebar-responsive.sidebar-collapsed {
+    width: 250px !important;
+    left: -250px !important;
+  }
+
+  .sidebar.sidebar-responsive.sidebar-collapsed.active {
+    left: 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar.sidebar-responsive {
+    width: 300px;
+    max-width: 85vw;
+    left: -300px !important;
+  }
+
+  .sidebar.sidebar-responsive.active {
+    left: 0 !important;
+  }
+
+  .sidebar.sidebar-responsive.sidebar-collapsed {
+    width: 300px !important;
+    max-width: 85vw;
+    left: -300px !important;
+  }
+
+  .sidebar.sidebar-responsive.sidebar-collapsed.active {
+    left: 0 !important;
+  }
+
+  /* Header responsive - mobile */
+  .top-header-right {
+    padding: 0 12px;
+    height: 56px;
+  }
+
+  .main-content {
+    margin-top: 56px;
+  }
+
+  .top-header-right .sidebar-toggle {
+    padding: 8px;
+    font-size: 1.1em;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .header-right-items {
+    gap: 8px;
+  }
+
+  .icon-btn {
+    padding: 8px 10px;
+    font-size: 1.1em;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .user-profile-btn {
+    padding: 4px 6px;
+    gap: 6px;
+  }
+
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85em;
+  }
+
+  .user-info {
+    display: flex; /* Tampilkan user info di mobile */
+  }
+
+  .user-name {
+    font-size: 0.8em;
+    line-height: 1.1;
+  }
+
+  .user-role {
+    font-size: 0.65em;
+    line-height: 1.1;
+  }
+
+  .user-profile-btn .fa-chevron-down {
+    font-size: 0.75em;
+  }
+
+  .dropdown-menu {
+    right: 0;
+    min-width: 160px;
+  }
+}
+
+/* Small Mobile Styles */
+@media (max-width: 480px) {
+  .top-header-right {
+    padding: 0 10px;
+    height: 52px;
+  }
+
+  .main-content {
+    margin-top: 52px;
+  }
+
+  .top-header-right .sidebar-toggle {
+    padding: 6px;
+    font-size: 1em;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .header-right-items {
+    gap: 6px;
+  }
+
+  .icon-btn {
+    padding: 6px 8px;
+    font-size: 1em;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .user-avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8em;
+  }
+
+  .user-profile-btn {
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .user-name {
+    font-size: 0.75em;
+  }
+
+  .user-role {
+    font-size: 0.6em;
+  }
 }
 
 /* Main Content Area */
@@ -894,10 +1168,37 @@ a:hover {
 /* Table Styling (Responsive) */
 .table-responsive {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scroll di iOS */
+  width: 100%;
+  display: block;
+  position: relative;
+  /* Custom Scrollbar untuk Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) var(--bg-elevated);
+}
+
+/* Custom Scrollbar untuk Webkit Browsers (Chrome, Safari, Edge) */
+.table-responsive::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: var(--bg-elevated);
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-hover);
 }
 
 .data-table {
   width: 100%;
+  min-width: 600px; /* Mencegah tabel terlalu kecil dan tetap bisa di-scroll horizontal */
   border-collapse: collapse;
   margin-top: 15px;
   background: var(--bg-card);
@@ -959,10 +1260,20 @@ a:hover {
   font-size: 0.9em;
   margin-right: 5px;
   transition: var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
 }
 
 .btn:hover {
   opacity: 0.9;
+}
+
+/* Button Small */
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.85em;
 }
 
 .btn-primary {
@@ -993,6 +1304,78 @@ a:hover {
 .btn-secondary:hover {
   background-color: var(--bg-muted);
   opacity: 1;
+}
+
+/* Responsive Button di Tabel - Kolom Aksi */
+.data-table td:last-child {
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+.data-table td:last-child .btn {
+  margin-bottom: 5px;
+}
+
+/* Responsive untuk Button di Tabel */
+@media (max-width: 768px) {
+  .data-table td:last-child {
+    min-width: 100px;
+  }
+
+  .data-table td:last-child .btn {
+    padding: 6px 10px;
+    font-size: 0.8em;
+    margin-right: 3px;
+    margin-bottom: 5px;
+    gap: 4px;
+  }
+
+  .data-table td:last-child .btn-sm {
+    padding: 5px 8px;
+    font-size: 0.75em;
+    gap: 3px;
+  }
+
+  /* Buat button lebih compact di tablet */
+  .data-table td:last-child .btn i {
+    margin: 0;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .data-table td:last-child {
+    min-width: 80px;
+  }
+
+  /* Sembunyikan text di mobile sangat kecil, hanya tampilkan icon */
+  /* Gunakan font-size: 0 pada button dan reset pada icon */
+  .data-table td:last-child .btn {
+    font-size: 0;
+    padding: 6px;
+    min-width: 36px;
+    width: 36px;
+    justify-content: center;
+    margin-right: 2px;
+    margin-bottom: 5px;
+  }
+
+  .data-table td:last-child .btn i {
+    font-size: 0.9em;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .data-table td:last-child .btn-sm {
+    padding: 5px;
+    min-width: 32px;
+    width: 32px;
+  }
+
+  .data-table td:last-child .btn-sm i {
+    font-size: 0.85em;
+    margin: 0;
+  }
 }
 
 /* Modal Styling */
@@ -1807,6 +2190,15 @@ a:hover {
 }
 
 /* Utility Classes for Icons (Font Awesome) */
+[class^="icon-"],
+[class*=" icon-"] {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+
 .icon-home:before {
   content: "\f015";
   font-family: "Font Awesome 5 Free";

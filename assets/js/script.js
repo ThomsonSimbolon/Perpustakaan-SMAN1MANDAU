@@ -118,7 +118,7 @@ function customConfirm(message) {
   });
 }
 
-// Sidebar Toggle Function
+// Sidebar Toggle Function (for desktop collapse/expand)
 function toggleSidebar() {
   const sidebar = document.getElementById("sidebar");
   const mainContent = document.querySelector(".main-content");
@@ -130,12 +130,49 @@ function toggleSidebar() {
   }
 }
 
+// Sidebar Responsive Functions (for mobile/tablet)
+function openSidebarResponsive() {
+  const sidebar = document.getElementById("sidebar");
+  const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+  if (sidebar && sidebarOverlay) {
+    sidebar.classList.add("active");
+    sidebarOverlay.classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+}
+
+function closeSidebarResponsive() {
+  const sidebar = document.getElementById("sidebar");
+  const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+  if (sidebar && sidebarOverlay) {
+    sidebar.classList.remove("active");
+    sidebarOverlay.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+}
+
+function toggleSidebarResponsive() {
+  const sidebar = document.getElementById("sidebar");
+  if (sidebar && sidebar.classList.contains("active")) {
+    closeSidebarResponsive();
+  } else {
+    openSidebarResponsive();
+  }
+}
+
+// Check if screen is mobile/tablet
+function isMobileOrTablet() {
+  return window.innerWidth <= 1024;
+}
+
 // Load saved sidebar state
 function loadSidebarState() {
   const sidebar = document.getElementById("sidebar");
   const savedState = localStorage.getItem("sidebarCollapsed");
 
-  if (sidebar && savedState === "true") {
+  if (sidebar && savedState === "true" && !isMobileOrTablet()) {
     sidebar.classList.add("sidebar-collapsed");
   }
 }
@@ -190,14 +227,56 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Load sidebar state
+  // Load sidebar state (only for desktop)
   loadSidebarState();
 
-  // Sidebar toggle button
-  const sidebarToggle = document.getElementById("sidebarToggle");
-  if (sidebarToggle) {
-    sidebarToggle.addEventListener("click", toggleSidebar);
+  // Initialize sidebar responsive state on mobile/tablet
+  const sidebar = document.getElementById("sidebar");
+  if (sidebar && isMobileOrTablet()) {
+    // Pastikan sidebar tersembunyi di mobile/tablet saat pertama kali load
+    sidebar.classList.remove("active");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    if (sidebarOverlay) {
+      sidebarOverlay.classList.remove("active");
+    }
+    document.body.style.overflow = "";
   }
+
+  // Sidebar toggle button - handle both desktop collapse and mobile responsive
+  const sidebarToggle = document.getElementById("sidebarToggle");
+  const sidebarClose = document.getElementById("sidebarClose");
+  const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener("click", function() {
+      if (isMobileOrTablet()) {
+        toggleSidebarResponsive();
+      } else {
+        toggleSidebar();
+      }
+    });
+  }
+
+  // Sidebar close button (mobile/tablet)
+  if (sidebarClose) {
+    sidebarClose.addEventListener("click", function() {
+      closeSidebarResponsive();
+    });
+  }
+
+  // Sidebar overlay click to close
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener("click", function() {
+      closeSidebarResponsive();
+    });
+  }
+
+  // Handle window resize - close responsive sidebar if screen becomes desktop
+  window.addEventListener("resize", function() {
+    if (!isMobileOrTablet() && sidebar && sidebar.classList.contains("active")) {
+      closeSidebarResponsive();
+    }
+  });
 
   // User profile dropdown toggle
   const userProfileBtn = document.getElementById("userProfileBtn");

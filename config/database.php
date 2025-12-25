@@ -192,18 +192,22 @@ function get_header($title, $role) {
     </div>
     <div class='wrapper'>
         <!-- Sidebar dengan Header Kiri di dalamnya -->
-        <aside class='sidebar sidebar-expanded' id='sidebar'>
+        <aside class='sidebar sidebar-expanded sidebar-responsive' id='sidebar'>
             <div class='sidebar-header'>
                 <div class='sidebar-logo'>
                     <i class='fas fa-book'></i>
                     <span class='sidebar-logo-text'>Perpus SMAN 1 MD</span>
                 </div>
+                <button class='sidebar-close' id='sidebarClose' aria-label='Close Sidebar'>
+                    <i class='fas fa-times'></i>
+                </button>
             </div>
             <ul class='nav-links'>
                 {$sidebar_menu}
-                <li class='nav-item'><a href='../auth/logout.php' data-tooltip='Logout'><i class='icon-log-out'></i><span class='nav-text'>Logout</span></a></li>
+                <li class='nav-item'><a href='../auth/logout.php' data-tooltip='Logout'><i class='fas fa-sign-out-alt'></i><span class='nav-text'>Logout</span></a></li>
             </ul>
         </aside>
+        <div class='sidebar-overlay' id='sidebarOverlay'></div>
 
         <!-- Header bagian kanan (di luar sidebar) -->
         <header class='top-header-right'>
