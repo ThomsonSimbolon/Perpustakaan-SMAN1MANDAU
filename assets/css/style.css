@@ -11,11 +11,19 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+html {
+  /* Prevent flash of white background */
+  background-color: var(--bg-page);
+  transition: background-color var(--transition-fast);
+}
+
 body {
   background-color: var(--bg-page);
   color: var(--text-primary);
   line-height: 1.6;
   transition: background var(--transition-fast), color var(--transition-fast);
+  /* Ensure smooth transition when theme changes */
+  min-height: 100vh;
 }
 
 a {

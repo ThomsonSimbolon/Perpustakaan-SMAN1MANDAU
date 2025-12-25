@@ -70,6 +70,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Login - SMAN 1 Mandau Library</title>
     <link rel="stylesheet" href="../assets/css/theme.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <!-- Inline script untuk apply theme SEBELUM body render (mencegah flash) -->
+    <script>
+        (function() {
+            try {
+                var savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    document.body.classList.add('dark');
+                }
+            } catch (e) {
+                // Jika localStorage tidak tersedia, skip
+            }
+        })();
+    </script>
 </head>
 <body class="login-body">
     <button onclick="toggleTheme()" style="position: fixed; top: 20px; right: 20px; padding: 10px 15px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 6px; color: white; cursor: pointer; z-index: 1000; transition: 0.2s ease;">
@@ -95,15 +109,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     <script>
         function toggleTheme() {
-            document.body.classList.toggle('dark');
             const isDark = document.body.classList.contains('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            if (isDark) {
+                // Switch to light mode
+                document.documentElement.classList.remove('dark');
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                // Switch to dark mode
+                document.documentElement.classList.add('dark');
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
         }
-        // Load saved theme preference
+        // Load saved theme preference (backup - sudah di-apply di head, ini untuk konsistensi)
         document.addEventListener('DOMContentLoaded', function() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
                 document.body.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.body.classList.remove('dark');
             }
         });
     </script>

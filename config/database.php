@@ -152,6 +152,20 @@ function get_header($title, $role) {
     <link rel='stylesheet' href='../assets/css/theme.css'>
     <link rel='stylesheet' href='../assets/css/style.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
+    <!-- Inline script untuk apply theme SEBELUM body render (mencegah flash) -->
+    <script>
+        (function() {
+            try {
+                var savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    document.body.classList.add('dark');
+                }
+            } catch (e) {
+                // Jika localStorage tidak tersedia, skip
+            }
+        })();
+    </script>
 </head>
 <body>
     <!-- Page Loader -->
@@ -250,6 +264,20 @@ function get_katalog_header($title) {
     <link rel='stylesheet' href='../assets/css/theme.css'>
     <link rel='stylesheet' href='../assets/css/style.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
+    <!-- Inline script untuk apply theme SEBELUM body render (mencegah flash) -->
+    <script>
+        (function() {
+            try {
+                var savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    document.body.classList.add('dark');
+                }
+            } catch (e) {
+                // Jika localStorage tidak tersedia, skip
+            }
+        })();
+    </script>
 </head>
 <body>
     <!-- Page Loader -->

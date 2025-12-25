@@ -2,9 +2,18 @@
 
 // Dark Mode Toggle Function
 function toggleTheme() {
-  document.body.classList.toggle("dark");
   const isDark = document.body.classList.contains("dark");
-  localStorage.setItem("theme", isDark ? "dark" : "light");
+  if (isDark) {
+    // Switch to light mode
+    document.documentElement.classList.remove("dark");
+    document.body.classList.remove("dark");
+    localStorage.setItem("theme", "light");
+  } else {
+    // Switch to dark mode
+    document.documentElement.classList.add("dark");
+    document.body.classList.add("dark");
+    localStorage.setItem("theme", "dark");
+  }
 }
 
 // Loader Spinner Functions
@@ -131,10 +140,14 @@ function closeDropdownOnOutsideClick(event) {
 
 // Load saved theme preference
 document.addEventListener("DOMContentLoaded", function () {
-  // Load theme preference
+  // Load theme preference (backup - sudah di-apply di head, ini untuk konsistensi)
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme === "dark") {
+    document.documentElement.classList.add("dark");
     document.body.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+    document.body.classList.remove("dark");
   }
 
   // Load sidebar state
