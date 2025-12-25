@@ -65,15 +65,16 @@ echo get_header("Laporan Perpustakaan", $_SESSION['role']);
         }
     }
     .filter-section {
-        background: var(--card-background);
+        background: var(--bg-card);
         padding: 20px;
-        border-radius: 8px;
+        border-radius: var(--radius-md);
         margin-bottom: 20px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
     }
     .filter-section h3 {
         margin-bottom: 15px;
-        color: var(--primary-color);
+        color: var(--color-primary);
     }
     .filter-form {
         display: flex;

@@ -10,7 +10,8 @@ Sistem Informasi Perpustakaan berbasis web yang dikembangkan menggunakan PHP Nat
 4. [Flow Bisnis Sistem](#flow-bisnis-sistem)
 5. [Role & Hak Akses](#role--hak-akses)
 6. [Panduan Pengujian](#panduan-pengujian)
-7. [Troubleshooting](#troubleshooting)
+7. [UI/UX Design & Color Scheme](#uiux-design--color-scheme)
+8. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -676,6 +677,147 @@ chown www-data:www-data assets/img/qr_codes/  # Sesuaikan user web server
 # Windows:
 # Klik kanan folder → Properties → Security → Edit permissions
 ```
+
+---
+
+## 🎨 UI/UX Design & Color Scheme
+
+### Color Palette
+
+Sistem menggunakan skema warna yang konsisten dengan nuansa pendidikan (biru/navy) sesuai requirements:
+
+#### Primary Colors
+
+- **Primary Color (Navy Blue):** `#003366`
+
+  - Digunakan untuk: Sidebar background, header katalog, judul card, table header, teks utama
+  - Nuansa pendidikan yang profesional
+
+- **Secondary Color (Bright Blue):** `#007bff`
+  - Digunakan untuk: Button primary, link, nilai statistik di card dashboard
+  - Memberikan kontras yang baik dengan primary color
+
+#### Status Colors
+
+- **Success Color (Hijau):** `#28a745`
+
+  - Digunakan untuk: Status badge "TERSEDIA", button success, indikator positif
+
+- **Danger Color (Merah):** `#dc3545`
+  - Digunakan untuk: Status badge "DIPINJAM", button danger/delete, error message
+
+#### Background Colors
+
+- **Background Color:** `#f4f7f6`
+
+  - Warna background utama halaman (light gray)
+
+- **Card Background:** `#ffffff`
+
+  - Background untuk card, modal, table (white)
+
+- **Text Color:** `#333333`
+
+  - Warna teks utama (dark gray)
+
+- **Border Color:** `#dddddd`
+  - Warna border untuk input, table, separator (light gray)
+
+#### Additional Colors
+
+- **Gray Text:** `#6c757d`
+
+  - Untuk teks sekunder, placeholder, subtitle
+
+- **Button Hover:** `#0056b3`
+
+  - Warna saat hover pada button primary
+
+- **Login Gradient:** `linear-gradient(135deg, #003366, #0056b3)`
+
+  - Gradient background untuk halaman login
+
+- **Modal Overlay:** `rgba(0, 0, 0, 0.4)`
+
+  - Background semi-transparan untuk modal overlay
+
+- **Sidebar Hover:** `rgba(255, 255, 255, 0.1)`
+
+  - Background saat hover pada menu sidebar
+
+- **Error Background:** `#f8d7da`
+
+  - Background untuk error message box
+
+- **Error Border:** `#f5c6cb`
+  - Border untuk error message box
+
+### UI Components & Colors
+
+#### Sidebar
+
+- **Background:** Primary Color (`#003366`)
+- **Text:** White (`#ffffff`)
+- **Menu Hover/Active:** White dengan opacity 10% (`rgba(255, 255, 255, 0.1)`)
+- **Border:** White dengan opacity 10% (`rgba(255, 255, 255, 0.1)`)
+
+#### Buttons
+
+- **Button Primary:** Secondary Color (`#007bff`) dengan text white
+- **Button Success:** Success Color (`#28a745`) dengan text white
+- **Button Danger:** Danger Color (`#dc3545`) dengan text white
+- **Button Hover:** Opacity 80% atau warna lebih gelap
+
+#### Status Badge
+
+- **Status TERSEDIA:** Success Color (`#28a745`) dengan text white
+- **Status DIPINJAM:** Danger Color (`#dc3545`) dengan text white
+
+#### Table
+
+- **Header Background:** Primary Color (`#003366`)
+- **Header Text:** White (`#ffffff`)
+- **Row Hover:** Light gray (`#f9f9f9`)
+- **Border:** Border Color (`#dddddd`)
+
+#### Card & Modal
+
+- **Background:** Card Background (`#ffffff`)
+- **Shadow:** Subtle shadow untuk depth (`rgba(0, 0, 0, 0.05)`)
+- **Border Radius:** 8px untuk rounded corners
+
+#### Form Input
+
+- **Border:** Border Color (`#dddddd`)
+- **Focus:** Secondary Color (`#007bff`)
+- **Background:** White (`#ffffff`)
+
+#### Login Page
+
+- **Background:** Gradient (`linear-gradient(135deg, #003366, #0056b3)`)
+- **Card Background:** White (`#ffffff`)
+- **Title:** Primary Color (`#003366`)
+
+### Typography
+
+- **Font Family:** 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+- **Font Size Base:** 16px
+- **Line Height:** 1.6
+- **Heading Colors:** Primary Color untuk h1-h4
+
+### Layout & Spacing
+
+- **Sidebar Width:** 250px
+- **Card Padding:** 20px
+- **Button Padding:** 8px 15px (small), 12px (medium)
+- **Border Radius:** 5px (button, input), 8px (card, modal)
+- **Gap/Spacing:** 10px, 15px, 20px, 30px (bervariasi sesuai konteks)
+
+### Icons
+
+Sistem menggunakan **Font Awesome 5** untuk icons:
+
+- Home, Users, Book, User Plus, Arrow Up/Down, File Text, Log Out, Search, Plus, Edit, Trash, Print, QR Code, Camera
 
 ---
 

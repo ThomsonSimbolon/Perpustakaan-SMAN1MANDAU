@@ -1,0 +1,106 @@
+/* =====================================================
+   NUxT STYLE THEME VARIABLES
+   ===================================================== */
+
+:root {
+  /* ===============================
+     BRAND & PRIMARY COLORS
+     =============================== */
+  --color-primary: #00DC82;       /* Nuxt green */
+  --color-primary-hover: #00c977;
+  --color-secondary: #2563EB;     /* blue */
+  --color-secondary-hover: #1D4ED8;
+
+  /* ===============================
+     BACKGROUND COLORS (LIGHT MODE)
+     =============================== */
+  --bg-page: #FFFFFF;
+  --bg-muted: #F8FAFC;
+  --bg-elevated: #F1F5F9;
+  --bg-card: #FFFFFF;
+  --bg-sidebar: #F9FAFB;
+  --bg-header: #FFFFFF;
+
+  /* ===============================
+     TEXT COLORS (LIGHT MODE)
+     =============================== */
+  --text-primary: #020617;     /* near-black */
+  --text-secondary: #334155;   /* slate */
+  --text-muted: #64748B;
+  --text-inverted: #FFFFFF;
+
+  /* ===============================
+     BORDER & DIVIDER
+     =============================== */
+  --border-color: #E5E7EB;
+
+  /* ===============================
+     STATUS COLORS
+     =============================== */
+  --color-success: #10B981;
+  --color-warning: #FACC15;
+  --color-danger: #EF4444;
+  --color-info: #38BDF8;
+
+  /* ===============================
+     SHADOW
+     =============================== */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 10px rgba(0,0,0,0.08);
+
+  /* ===============================
+     RADIUS
+     =============================== */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* ===============================
+     TRANSITION
+     =============================== */
+  --transition-fast: 0.2s ease;
+}
+
+/* =====================================================
+   DARK MODE
+   ===================================================== */
+
+.dark {
+  /* ===============================
+     BACKGROUND COLORS (DARK MODE)
+     =============================== */
+  --bg-page: #020420;        /* nuxt dark background */
+  --bg-muted: #0B102F;
+  --bg-elevated: #111827;
+  --bg-card: #0F172A;
+  --bg-sidebar: #020420;
+  --bg-header: #020420;
+
+  /* ===============================
+     TEXT COLORS (DARK MODE)
+     =============================== */
+  --text-primary: #F9FAFB;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --text-inverted: #020617;
+
+  /* ===============================
+     BORDER & DIVIDER
+     =============================== */
+  --border-color: #1F2937;
+
+  /* ===============================
+     STATUS COLORS (SOFTER)
+     =============================== */
+  --color-success: #34D399;
+  --color-warning: #FBBF24;
+  --color-danger: #F87171;
+  --color-info: #60A5FA;
+
+  /* ===============================
+     SHADOW
+     =============================== */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 8px 20px rgba(0,0,0,0.6);
+}
+

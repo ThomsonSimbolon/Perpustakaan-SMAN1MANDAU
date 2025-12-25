@@ -40,11 +40,12 @@ echo get_katalog_header("Katalog Buku");
 
 <style>
     .search-section {
-        background: var(--card-background);
+        background: var(--bg-card);
         padding: 25px;
-        border-radius: 8px;
+        border-radius: var(--radius-md);
         margin-bottom: 30px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
     }
     .search-form {
         display: flex;
@@ -64,28 +65,29 @@ echo get_katalog_header("Katalog Buku");
         gap: 20px;
     }
     .book-card {
-        background: var(--card-background);
+        background: var(--bg-card);
         padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+        transition: transform var(--transition-fast), box-shadow var(--transition-fast);
     }
     .book-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-md);
     }
     .book-title {
         font-size: 1.2em;
         font-weight: bold;
-        color: var(--primary-color);
+        color: var(--color-primary);
         margin-bottom: 10px;
     }
     .book-info {
         margin-bottom: 8px;
-        color: var(--text-color);
+        color: var(--text-primary);
     }
     .book-info strong {
-        color: var(--primary-color);
+        color: var(--color-primary);
     }
     .book-status {
         margin-top: 15px;
@@ -93,20 +95,22 @@ echo get_katalog_header("Katalog Buku");
         border-top: 1px solid var(--border-color);
     }
     .info-banner {
-        background: #e7f3ff;
-        border-left: 4px solid var(--secondary-color);
+        background: var(--bg-muted);
+        border-left: 4px solid var(--color-secondary);
         padding: 15px;
         margin-bottom: 20px;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
     }
     .catalog-stats {
-        background: var(--card-background);
+        background: var(--bg-card);
         padding: 15px;
-        border-radius: 8px;
+        border-radius: var(--radius-md);
         margin-bottom: 20px;
         display: flex;
         justify-content: space-around;
         text-align: center;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
     }
     .catalog-stats .stat-item {
         flex: 1;
@@ -114,10 +118,10 @@ echo get_katalog_header("Katalog Buku");
     .catalog-stats .stat-value {
         font-size: 2em;
         font-weight: bold;
-        color: var(--secondary-color);
+        color: var(--color-secondary);
     }
     .catalog-stats .stat-label {
-        color: var(--text-color);
+        color: var(--text-primary);
         font-size: 0.9em;
     }
 </style>
@@ -128,15 +132,15 @@ echo get_katalog_header("Katalog Buku");
 </div>
 
 <div class="search-section">
-    <h2 style="margin-bottom: 20px; color: var(--primary-color);">Cari Buku</h2>
+    <h2 style="margin-bottom: 20px; color: var(--color-primary);">Cari Buku</h2>
     <form method="GET" action="index.php" class="search-form">
         <div class="form-group">
             <label for="search">Kata Kunci</label>
-            <input type="text" name="search" id="search" placeholder="Masukkan judul atau pengarang buku..." value="<?php echo htmlspecialchars($search_query); ?>" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px;">
+            <input type="text" name="search" id="search" placeholder="Masukkan judul atau pengarang buku..." value="<?php echo htmlspecialchars($search_query); ?>" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background-color: var(--bg-card); color: var(--text-primary);">
         </div>
         <div class="form-group">
             <label for="search_type">Cari Berdasarkan</label>
-            <select name="search_type" id="search_type" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px;">
+            <select name="search_type" id="search_type" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background-color: var(--bg-card); color: var(--text-primary);">
                 <option value="judul" <?php echo $search_type == 'judul' ? 'selected' : ''; ?>>Judul</option>
                 <option value="pengarang" <?php echo $search_type == 'pengarang' ? 'selected' : ''; ?>>Pengarang</option>
             </select>
@@ -170,11 +174,11 @@ foreach ($buku_list as $b) {
         <div class="stat-label">Total Buku</div>
     </div>
     <div class="stat-item">
-        <div class="stat-value" style="color: var(--success-color);"><?php echo $buku_tersedia; ?></div>
+        <div class="stat-value" style="color: var(--color-success);"><?php echo $buku_tersedia; ?></div>
         <div class="stat-label">Tersedia</div>
     </div>
     <div class="stat-item">
-        <div class="stat-value" style="color: var(--danger-color);"><?php echo $buku_dipinjam; ?></div>
+        <div class="stat-value" style="color: var(--color-danger);"><?php echo $buku_dipinjam; ?></div>
         <div class="stat-label">Dipinjam</div>
     </div>
 </div>

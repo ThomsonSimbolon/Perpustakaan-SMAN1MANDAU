@@ -104,8 +104,8 @@ echo get_header("Transaksi Pengembalian", $_SESSION['role']);
         transition: all 0.3s;
     }
     .qr-tab-button.active {
-        background-color: var(--secondary-color);
-        color: white;
+        background-color: var(--color-primary);
+        color: #022C22;
     }
     .qr-tab-button:not(.active) {
         background-color: #6c757d;
@@ -150,7 +150,7 @@ echo get_header("Transaksi Pengembalian", $_SESSION['role']);
 </div>
 
 <?php if ($peminjaman_data): ?>
-<div class="card" style="border: 2px solid var(--secondary-color);">
+<div class="card" style="border: 2px solid var(--color-primary);">
     <h3>Detail Peminjaman Aktif</h3>
     <table class="data-table" style="margin-top: 10px;">
         <tr><th>ID Peminjaman</th><td><?php echo $peminjaman_data['id_peminjaman']; ?></td></tr>

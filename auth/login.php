@@ -68,9 +68,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SMAN 1 Mandau Library</title>
+    <link rel="stylesheet" href="../assets/css/theme.css">
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body class="login-body">
+    <button onclick="toggleTheme()" style="position: fixed; top: 20px; right: 20px; padding: 10px 15px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 6px; color: white; cursor: pointer; z-index: 1000; transition: 0.2s ease;">
+        <i class="fas fa-moon"></i> Dark Mode
+    </button>
     <div class="login-container">
         <h2>Sistem Informasi Perpustakaan</h2>
         <h3>SMAN 1 Mandau</h3>
@@ -89,5 +93,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" class="btn-login">Login</button>
         </form>
     </div>
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+        // Load saved theme preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+            }
+        });
+    </script>
 </body>
 </html>
