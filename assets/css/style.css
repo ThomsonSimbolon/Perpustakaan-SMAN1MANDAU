@@ -1069,33 +1069,664 @@ a:hover {
 /* Katalog Styling (Siswa/Guru) */
 .katalog-wrapper {
   padding: 0;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Katalog Sidebar */
+.katalog-sidebar {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  left: auto;
+  width: 320px;
+  height: 100vh;
+  background-color: var(--bg-sidebar);
+  border-left: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+  z-index: 1000;
+  transition: right var(--transition-fast);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.katalog-sidebar.active {
+  right: 0;
+}
+
+.katalog-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-sidebar);
+  box-shadow: var(--shadow-sm);
+}
+
+.katalog-sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.katalog-sidebar-logo i {
+  font-size: 1.5em;
+  color: var(--color-primary);
+}
+
+.katalog-sidebar-logo-text {
+  font-size: 1.1em;
+  white-space: nowrap;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.katalog-sidebar-close {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.3em;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.katalog-sidebar-close:hover {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.dark .katalog-sidebar-close {
+  color: var(--text-primary);
+}
+
+.dark .katalog-sidebar-close:hover {
+  color: var(--color-primary);
+}
+
+.katalog-nav-links {
+  list-style: none;
+  padding: 15px 10px;
+  margin: 0;
+}
+
+.katalog-nav-item {
+  margin-bottom: 5px;
+}
+
+.katalog-nav-item a {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  color: var(--text-primary);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+  position: relative;
+}
+
+.katalog-nav-item a:hover {
+  background-color: var(--bg-elevated);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.katalog-nav-item.active a {
+  background-color: var(--bg-elevated);
+  color: var(--color-primary);
+  font-weight: 600;
+  border-right: 3px solid var(--color-primary);
+  border-left: none;
+  padding-right: 12px;
+  padding-left: 15px;
+}
+
+.katalog-nav-item a i {
+  margin-right: 12px;
+  font-size: 1.1em;
+  min-width: 20px;
+  text-align: center;
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+
+.katalog-nav-item a:hover i,
+.katalog-nav-item.active a i {
+  color: var(--color-primary);
+}
+
+.dark .katalog-nav-item a {
+  color: var(--text-primary);
+}
+
+.dark .katalog-nav-item a i {
+  color: var(--text-secondary);
+}
+
+.dark .katalog-nav-item a:hover i,
+.dark .katalog-nav-item.active a i {
+  color: var(--color-primary);
+}
+
+.katalog-nav-text {
+  color: inherit;
+  font-weight: 500;
+  transition: var(--transition-fast);
+}
+
+/* Sidebar nav text - selalu terlihat */
+.katalog-sidebar .katalog-nav-text {
+  color: var(--text-primary);
+  display: inline-block !important;
+  font-weight: 500;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Light Mode - Sidebar */
+.katalog-sidebar .katalog-nav-item a {
+  color: var(--text-primary);
+}
+
+.katalog-sidebar .katalog-nav-item a .katalog-nav-text {
+  color: var(--text-primary);
+}
+
+.katalog-sidebar .katalog-nav-item.active a {
+  color: var(--color-primary);
+  border-right: 3px solid var(--color-primary);
+  border-left: none;
+  padding-right: 12px;
+  padding-left: 15px;
+}
+
+.katalog-sidebar .katalog-nav-item.active a .katalog-nav-text {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.katalog-sidebar .katalog-nav-item a:hover {
+  color: var(--color-primary);
+}
+
+.katalog-sidebar .katalog-nav-item a:hover .katalog-nav-text {
+  color: var(--color-primary);
+}
+
+/* Dark Mode - Sidebar */
+.dark .katalog-sidebar {
+  background-color: var(--bg-sidebar);
+}
+
+.dark .katalog-sidebar-logo {
+  color: var(--text-primary);
+}
+
+.dark .katalog-sidebar-logo-text {
+  color: var(--text-primary);
+}
+
+.dark .katalog-sidebar .katalog-nav-item a {
+  color: var(--text-primary);
+}
+
+.dark .katalog-sidebar .katalog-nav-item a .katalog-nav-text {
+  color: var(--text-primary) !important;
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.dark .katalog-sidebar .katalog-nav-item.active a {
+  color: var(--color-primary);
+  border-right: 3px solid var(--color-primary);
+  border-left: none;
+  padding-right: 12px;
+  padding-left: 15px;
+}
+
+.dark .katalog-sidebar .katalog-nav-item.active a .katalog-nav-text {
+  color: var(--color-primary) !important;
+  font-weight: 600;
+}
+
+.dark .katalog-sidebar .katalog-nav-item a:hover {
+  color: var(--color-primary);
+}
+
+.dark .katalog-sidebar .katalog-nav-item a:hover .katalog-nav-text {
+  color: var(--color-primary) !important;
+}
+
+.katalog-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-fast);
+}
+
+.katalog-sidebar-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.katalog-sidebar-toggle {
+  background: rgba(2, 44, 34, 0.15);
+  border: 1px solid rgba(2, 44, 34, 0.25);
+  border-radius: var(--radius-sm);
+  color: #022c22;
+  font-size: 1.1em;
+  cursor: pointer;
+  padding: 8px 14px;
+  min-height: 48px;
+  transition: var(--transition-fast);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.katalog-sidebar-toggle:hover {
+  background: rgba(2, 44, 34, 0.22);
+  transform: translateY(-1px);
+}
+
+.dark .katalog-sidebar-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.dark .katalog-sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.katalog-main-content {
+  transition: margin-left var(--transition-fast);
+  min-height: 100vh;
+}
+
+.katalog-content {
+  padding: 30px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .katalog-header {
   background-color: var(--color-primary);
   color: #022c22;
-  padding: 20px 40px;
+  padding: 12px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 20px;
+  min-height: 60px;
+}
+
+.katalog-header-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
 }
 
 .katalog-header h1 {
-  font-size: 1.8em;
+  font-size: 1.4em;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
-.katalog-header nav a {
+.katalog-header h1::before {
+  content: "\f02d";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 1.1em;
+}
+
+.katalog-nav {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.katalog-nav > * {
+  display: flex;
+  align-items: center;
+}
+
+.katalog-nav-icon-btn {
+  padding: 8px 14px;
+  height: auto;
+  min-height: 36px;
+  background: rgba(2, 44, 34, 0.15);
+  border: 1px solid rgba(2, 44, 34, 0.25);
+  border-radius: var(--radius-sm);
   color: #022c22;
-  margin-left: 20px;
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.katalog-nav-icon-btn:hover {
+  background: rgba(2, 44, 34, 0.22);
+  transform: translateY(-1px);
+}
+
+.dark .katalog-header {
+  background-color: var(--bg-header);
+  color: var(--text-primary);
+}
+
+.dark .katalog-header h1 {
+  color: var(--text-primary);
+}
+
+.dark .katalog-header h1::before {
+  color: var(--color-primary);
+}
+
+.dark .katalog-nav-icon-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.dark .katalog-nav-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.katalog-nav-text {
+  display: inline-block;
+}
+
+.katalog-user-dropdown {
+  position: relative;
+}
+
+.katalog-user-btn {
+  padding: 8px 14px;
+  height: auto;
+  min-height: 36px;
+  background: rgba(2, 44, 34, 0.15);
+  border: 1px solid rgba(2, 44, 34, 0.25);
+  border-radius: var(--radius-sm);
+  color: #022c22;
+  cursor: pointer;
+  font-size: 0.95em;
   font-weight: 500;
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
-.katalog-header nav a:hover {
-  text-decoration: underline;
+.katalog-user-btn:hover {
+  background: rgba(2, 44, 34, 0.25);
+  transform: translateY(-1px);
 }
 
-.katalog-content {
-  padding: 20px 40px;
+.katalog-user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(2, 44, 34, 0.3);
+  color: #022c22;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85em;
+  flex-shrink: 0;
+}
+
+.dark .katalog-user-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.dark .katalog-user-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dark .katalog-user-avatar {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.dark .katalog-user-btn i {
+  color: var(--text-primary);
+}
+
+.katalog-user-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.katalog-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  min-width: 180px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all var(--transition-fast);
+  z-index: 1000;
+  padding: 8px 0;
+}
+
+.dark .katalog-dropdown-menu {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+.katalog-user-dropdown.active .katalog-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.katalog-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: var(--transition-fast);
+  font-size: 0.95em;
+}
+
+.katalog-dropdown-item:hover {
+  background: var(--bg-elevated);
+  text-decoration: none;
+  color: var(--color-primary);
+}
+
+.katalog-dropdown-item i {
+  width: 18px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.katalog-dropdown-item:hover i {
+  color: var(--color-primary);
+}
+
+/* Desktop - Hide toggle, show profile dropdown */
+.katalog-sidebar-toggle {
+  display: none;
+}
+
+.katalog-user-dropdown-desktop {
+  display: block;
+}
+
+/* Tablet Styles */
+@media (max-width: 1024px) {
+  .katalog-content {
+    padding: 20px 15px;
+  }
+
+  .katalog-header h1 {
+    font-size: 1.4em;
+  }
+
+  /* Hide nav text hanya di header navbar, bukan di sidebar */
+  .katalog-header .katalog-nav-text {
+    display: none;
+  }
+
+  .katalog-user-name {
+    display: none;
+  }
+
+  /* Pastikan sidebar nav text selalu terlihat */
+  .katalog-sidebar .katalog-nav-text {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .katalog-sidebar-close {
+    display: flex;
+  }
+
+  /* Hide profile dropdown di tablet/mobile karena sudah ada di sidebar */
+  .katalog-user-dropdown-desktop {
+    display: none !important;
+  }
+
+  /* Show toggle button di tablet/mobile */
+  .katalog-sidebar-toggle {
+    display: flex !important;
+  }
+
+  /* Sidebar width untuk tablet - optimal untuk readability */
+  .katalog-sidebar {
+    width: 320px;
+    right: -320px;
+  }
+}
+
+/* Tablet Landscape (768px - 1024px) - Lebih optimal */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .katalog-sidebar {
+    width: 340px;
+    right: -340px;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .katalog-content {
+    padding: 15px 12px;
+  }
+
+  .katalog-header {
+    padding: 15px 20px;
+    flex-wrap: nowrap;
+  }
+
+  .katalog-header-left {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .katalog-header h1 {
+    font-size: 1.1em;
+    gap: 8px;
+  }
+
+  .katalog-header h1::before {
+    font-size: 1em;
+  }
+
+  .katalog-nav {
+    gap: 8px;
+  }
+
+  .katalog-nav-icon-btn {
+    padding: 8px 12px;
+    min-height: 44px;
+  }
+
+  .katalog-sidebar-toggle {
+    padding: 8px 12px;
+    min-height: 44px;
+    display: flex;
+  }
+
+  /* Hide profile dropdown di mobile karena sudah ada di sidebar */
+  .katalog-user-dropdown-desktop {
+    display: none;
+  }
+
+  .katalog-sidebar {
+    width: 300px;
+    max-width: 85vw;
+    right: -300px;
+    left: auto;
+  }
+
+  .katalog-sidebar-close {
+    display: flex;
+  }
+}
+
+/* Small Mobile Styles */
+@media (max-width: 480px) {
+  .katalog-content {
+    padding: 12px 10px;
+  }
+
+  .katalog-header {
+    padding: 12px 15px;
+  }
+
+  .katalog-header h1 {
+    font-size: 1em;
+  }
+
+  .katalog-nav-icon-btn,
+  .katalog-user-btn {
+    padding: 8px 10px;
+    min-height: 40px;
+  }
 }
 
 .katalog-search-bar {
@@ -1167,11 +1798,12 @@ a:hover {
 
 .katalog-footer {
   text-align: center;
-  padding: 15px;
-  background-color: var(--bg-muted);
-  color: var(--text-primary);
-  margin-top: 30px;
+  padding: 25px;
+  background-color: var(--bg-elevated);
+  color: var(--text-muted);
+  margin-top: 50px;
   border-top: 1px solid var(--border-color);
+  font-size: 0.9em;
 }
 
 /* Utility Classes for Icons (Font Awesome) */

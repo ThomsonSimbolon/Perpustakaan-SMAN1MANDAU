@@ -21,10 +21,12 @@ Sistem Informasi Perpustakaan berbasis web yang dikembangkan menggunakan PHP Nat
 
 1. **Multi-Role Access:** Admin, Pustakawan, Siswa, dan Guru dengan hak akses berbeda
 2. **Manajemen Data:** Kelola Pengguna, Anggota, dan Buku
-3. **Transaksi Peminjaman:** Mencatat peminjaman dan **Generate QR Code** untuk setiap transaksi
-4. **Transaksi Pengembalian:** Memproses pengembalian dengan **Scan QR Code (Kamera)** atau Input Manual dan menghitung denda otomatis
-5. **Katalog Online:** Siswa/Guru dapat melihat katalog, mencari buku, dan mengecek ketersediaan
-6. **Laporan:** Laporan Peminjaman dan Pengembalian yang dapat dicetak
+3. **Data Diri Siswa & Guru:** Sistem menyediakan data diri lengkap untuk siswa dan guru (NIS/NIP, kelas/jurusan/mata pelajaran, kontak, dll) yang tersimpan terpisah dari data login
+4. **Profil Pengguna:** Siswa dan guru dapat mengakses halaman profil untuk melihat data diri mereka
+5. **Transaksi Peminjaman:** Mencatat peminjaman dan **Generate QR Code** untuk setiap transaksi
+6. **Transaksi Pengembalian:** Memproses pengembalian dengan **Scan QR Code (Kamera)** atau Input Manual dan menghitung denda otomatis
+7. **Katalog Online:** Siswa/Guru dapat melihat katalog, mencari buku, dan mengecek ketersediaan
+8. **Laporan:** Laporan Peminjaman dan Pengembalian yang dapat dicetak
 
 ---
 
@@ -160,6 +162,76 @@ http://localhost/perpustakaan_sman1mandau/perpustakaan/
 
 ---
 
+## 📋 Data Diri Siswa & Guru
+
+Sistem menyediakan data diri lengkap untuk siswa dan guru yang tersimpan terpisah dari data login. Data ini digunakan untuk menampilkan profil pengguna dan mendukung proses administrasi perpustakaan.
+
+### Struktur Data Anggota
+
+Tabel `anggota` memiliki struktur berikut:
+
+**Field Wajib:**
+
+- `id_anggota` (PK)
+- `nama_lengkap` - Nama lengkap anggota
+- `jenis_anggota` - ENUM('siswa', 'guru')
+- `status_aktif` - ENUM('AKTIF', 'NONAKTIF'), default: AKTIF
+
+**Field Khusus Siswa:**
+
+- `nis` - Nomor Induk Siswa (UNIQUE, wajib untuk siswa)
+- `kelas` - Kelas siswa
+- `jurusan` - Jurusan siswa
+
+**Field Khusus Guru:**
+
+- `nip` - Nomor Induk Pegawai (UNIQUE, wajib untuk guru)
+- `mata_pelajaran` - Mata pelajaran yang diajar
+
+**Field Umum (Opsional):**
+
+- `id_user` - Foreign key ke tabel users (untuk link dengan akun login)
+- `jenis_kelamin` - ENUM('L', 'P')
+- `no_hp` - Nomor HP
+- `email` - Email
+
+### Flow Input Data Diri
+
+1. **Admin membuat User:**
+
+   - Admin membuat akun user dengan role siswa/guru di menu "Kelola User"
+
+2. **Pustakawan membuat Anggota:**
+
+   - Pustakawan login dan pilih menu "Data Anggota"
+   - Klik "Tambah Anggota"
+   - Pilih user yang sudah dibuat (role harus sesuai jenis anggota)
+   - Isi data diri lengkap sesuai jenis anggota (siswa/guru)
+   - Sistem validasi dan simpan data
+
+3. **Siswa/Guru melihat Profil:**
+   - Login dengan akun yang sudah di-link
+   - Akses menu "Profile" di katalog
+   - Sistem menampilkan data diri lengkap
+
+### Migrasi Data Existing
+
+Jika sistem sudah memiliki data anggota existing yang belum di-link dengan user:
+
+1. Jalankan script SQL: `assets/database/alter_anggota.sql`
+2. Akses script migrasi: `assets/database/migrate_anggota.php` (harus login sebagai admin)
+3. Link anggota existing dengan user yang sesuai (manual mapping)
+4. Setelah semua data di-link, bisa enable foreign key constraint di database
+
+### Catatan Penting
+
+- Relasi antara `users` dan `anggota` adalah one-to-one (1 user = 1 anggota)
+- Data login (username, password) tersimpan di tabel `users`
+- Data diri (NIS/NIP, kelas, dll) tersimpan di tabel `anggota`
+- Flow peminjaman tetap menggunakan `id_anggota` (tidak berubah)
+
+---
+
 ## 🔐 Role & Hak Akses
 
 ### 1. ADMIN
@@ -213,6 +285,7 @@ http://localhost/perpustakaan_sman1mandau/perpustakaan/
 **Menu:**
 
 - Katalog
+- Profile
 - Logout
 
 ### 4. GURU
@@ -228,6 +301,7 @@ http://localhost/perpustakaan_sman1mandau/perpustakaan/
 **Menu:**
 
 - Katalog
+- Profile
 - Logout
 
 ---
@@ -265,9 +339,26 @@ http://localhost/perpustakaan_sman1mandau/perpustakaan/
 1. Pustakawan login
 2. Pilih menu "Data Anggota"
 3. Tambah/Edit/Hapus anggota:
-   - Input: Nama, Jenis Anggota (Siswa/Guru), Kelas (jika Siswa)
-   - Validasi: Kelas hanya untuk Siswa
-4. Sistem menyimpan data anggota
+
+   Untuk Anggota Baru:
+   - Pilih User (wajib) - hanya user dengan role siswa/guru yang belum punya anggota
+   - Input: Nama Lengkap (wajib), Jenis Anggota (Siswa/Guru)
+
+   Untuk Siswa:
+   - Input: NIS (wajib, unique), Kelas, Jurusan
+
+   Untuk Guru:
+   - Input: NIP (wajib, unique), Mata Pelajaran
+
+   Field Umum (opsional):
+   - Jenis Kelamin, No. HP, Email
+   - Status Aktif (default: AKTIF)
+
+4. Validasi:
+   - Role user harus sesuai jenis_anggota (siswa → siswa, guru → guru)
+   - NIS wajib untuk siswa, NIP wajib untuk guru
+   - NIS dan NIP harus unique
+5. Sistem menyimpan data anggota
 ```
 
 ### Flow 4: Peminjaman Buku (Generate QR Code)
@@ -1057,6 +1148,6 @@ Library PHP QR Code menggunakan lisensi LGPL 3.0.
 
 ---
 
-**Versi Dokumen:** 1.1  
+**Versi Dokumen:** 1.2  
 **Terakhir Diupdate:** Desember 2025  
-**Perubahan Terakhir:** Implementasi Password Hashing untuk Keamanan Autentikasi
+**Perubahan Terakhir:** Implementasi Data Diri Siswa & Guru dengan Halaman Profil

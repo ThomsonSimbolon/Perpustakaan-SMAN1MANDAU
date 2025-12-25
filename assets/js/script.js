@@ -3,16 +3,36 @@
 // Dark Mode Toggle Function
 function toggleTheme() {
   const isDark = document.body.classList.contains("dark");
+  const darkModeButtons = document.querySelectorAll(
+    ".katalog-nav-icon-btn[onclick='toggleTheme()'], .icon-btn[onclick='toggleTheme()']"
+  );
+
   if (isDark) {
     // Switch to light mode
     document.documentElement.classList.remove("dark");
     document.body.classList.remove("dark");
     localStorage.setItem("theme", "light");
+
+    // Update icon
+    darkModeButtons.forEach((btn) => {
+      const icon = btn.querySelector("i");
+      if (icon) {
+        icon.className = "fas fa-moon";
+      }
+    });
   } else {
     // Switch to dark mode
     document.documentElement.classList.add("dark");
     document.body.classList.add("dark");
     localStorage.setItem("theme", "dark");
+
+    // Update icon
+    darkModeButtons.forEach((btn) => {
+      const icon = btn.querySelector("i");
+      if (icon) {
+        icon.className = "fas fa-sun";
+      }
+    });
   }
 }
 
@@ -142,12 +162,32 @@ function closeDropdownOnOutsideClick(event) {
 document.addEventListener("DOMContentLoaded", function () {
   // Load theme preference (backup - sudah di-apply di head, ini untuk konsistensi)
   const savedTheme = localStorage.getItem("theme");
+  const darkModeButtons = document.querySelectorAll(
+    ".katalog-nav-icon-btn[onclick='toggleTheme()'], .icon-btn[onclick='toggleTheme()']"
+  );
+
   if (savedTheme === "dark") {
     document.documentElement.classList.add("dark");
     document.body.classList.add("dark");
+
+    // Update icon untuk dark mode
+    darkModeButtons.forEach((btn) => {
+      const icon = btn.querySelector("i");
+      if (icon) {
+        icon.className = "fas fa-sun";
+      }
+    });
   } else {
     document.documentElement.classList.remove("dark");
     document.body.classList.remove("dark");
+
+    // Update icon untuk light mode
+    darkModeButtons.forEach((btn) => {
+      const icon = btn.querySelector("i");
+      if (icon) {
+        icon.className = "fas fa-moon";
+      }
+    });
   }
 
   // Load sidebar state
@@ -265,6 +305,88 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }, 50); // Delay kecil untuk memastikan semua elemen sudah ter-render
+
+  // Katalog Navigation - User Dropdown
+  const katalogUserBtn = document.getElementById("katalogUserBtn");
+  const katalogDropdown = document.getElementById("katalogDropdown");
+  const katalogUserDropdown = katalogUserBtn?.closest(".katalog-user-dropdown");
+
+  if (katalogUserBtn && katalogUserDropdown) {
+    katalogUserBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      katalogUserDropdown.classList.toggle("active");
+    });
+
+    // Close dropdown saat klik di luar
+    document.addEventListener("click", function (e) {
+      if (!katalogUserDropdown.contains(e.target)) {
+        katalogUserDropdown.classList.remove("active");
+      }
+    });
+  }
+
+  // Katalog Sidebar Toggle
+  const katalogSidebarToggle = document.getElementById("katalogSidebarToggle");
+  const katalogSidebar = document.getElementById("katalogSidebar");
+  const katalogSidebarClose = document.getElementById("katalogSidebarClose");
+  const katalogSidebarOverlay = document.getElementById(
+    "katalogSidebarOverlay"
+  );
+
+  function openKatalogSidebar() {
+    if (katalogSidebar) {
+      katalogSidebar.classList.add("active");
+      if (katalogSidebarOverlay) {
+        katalogSidebarOverlay.classList.add("active");
+      }
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  function closeKatalogSidebar() {
+    if (katalogSidebar) {
+      katalogSidebar.classList.remove("active");
+      if (katalogSidebarOverlay) {
+        katalogSidebarOverlay.classList.remove("active");
+      }
+      document.body.style.overflow = "";
+    }
+  }
+
+  if (katalogSidebarToggle) {
+    katalogSidebarToggle.addEventListener("click", function () {
+      openKatalogSidebar();
+    });
+  }
+
+  if (katalogSidebarClose) {
+    katalogSidebarClose.addEventListener("click", function () {
+      closeKatalogSidebar();
+    });
+  }
+
+  if (katalogSidebarOverlay) {
+    katalogSidebarOverlay.addEventListener("click", function () {
+      closeKatalogSidebar();
+    });
+  }
+
+  // Set active state untuk katalog navigation links
+  const currentPage = window.location.pathname;
+  const katalogNavItems = document.querySelectorAll(".katalog-nav-item a");
+
+  katalogNavItems.forEach((link) => {
+    if (link.getAttribute("href")) {
+      const href = link.getAttribute("href");
+      // Check if current page matches
+      if (
+        currentPage.includes(href) ||
+        (href === "index.php" && currentPage.includes("katalog/index.php"))
+      ) {
+        link.closest(".katalog-nav-item")?.classList.add("active");
+      }
+    }
+  });
 
   // Tambahkan logika lain seperti validasi form, AJAX, atau interaksi QR Code di sini
 });
