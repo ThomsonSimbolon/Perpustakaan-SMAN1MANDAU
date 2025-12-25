@@ -106,10 +106,38 @@ function get_header($title, $role) {
     // Generate role display text
     $role_display = $user_role . ' Dashboard';
 
+    // Ambil nama file saat ini dari REQUEST_URI atau SCRIPT_NAME
+    $current_uri = $_SERVER['REQUEST_URI'];
+    $current_script = $_SERVER['SCRIPT_NAME'];
+    
+    // Ekstrak nama file dari script name (lebih reliable)
+    $current_file = basename($current_script);
+    
+    // Jika tidak ada, coba dari URI
+    if (empty($current_file) || $current_file == 'index.php') {
+        $uri_path = parse_url($current_uri, PHP_URL_PATH);
+        $current_file = basename($uri_path);
+    }
+    
     $sidebar_menu = '';
     if (isset($menu[$role])) {
         foreach ($menu[$role] as $item) {
-            $active = (strpos($_SERVER['REQUEST_URI'], $item['link']) !== false) ? 'active' : '';
+            // Ekstrak nama file dari link (hilangkan ../ jika ada)
+            $link_path = str_replace('../', '', $item['link']);
+            $link_file = basename($link_path);
+            
+            // Bandingkan nama file untuk menentukan active
+            $is_active = ($current_file === $link_file);
+            
+            // Fallback: cek apakah current script path mengandung link path
+            if (!$is_active) {
+                // Normalisasi path untuk perbandingan
+                $normalized_script = str_replace('\\', '/', $current_script);
+                $normalized_link = str_replace('\\', '/', $link_path);
+                $is_active = (strpos($normalized_script, $normalized_link) !== false);
+            }
+            
+            $active = $is_active ? 'active' : '';
             $sidebar_menu .= "<li class='nav-item {$active}'><a href='{$item['link']}' data-tooltip='{$item['text']}'><i class='icon-{$item['icon']}'></i><span class='nav-text'>{$item['text']}</span></a></li>";
         }
     }
@@ -126,6 +154,28 @@ function get_header($title, $role) {
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
 </head>
 <body>
+    <!-- Page Loader -->
+    <div id='pageLoader' class='page-loader'>
+        <div class='loader-overlay'></div>
+        <div class='loader-spinner'></div>
+    </div>
+    
+    <!-- Custom Confirmation Modal -->
+    <div id='confirmModal' class='confirm-modal'>
+        <div class='confirm-modal-content'>
+            <div class='confirm-modal-header'>
+                <i class='fas fa-exclamation-triangle'></i>
+                <h3>Konfirmasi</h3>
+            </div>
+            <div class='confirm-modal-body'>
+                <p id='confirmMessage'></p>
+            </div>
+            <div class='confirm-modal-footer'>
+                <button class='confirm-btn confirm-btn-secondary' id='confirmCancel'>Batal</button>
+                <button class='confirm-btn confirm-btn-primary' id='confirmOK'>OK</button>
+            </div>
+        </div>
+    </div>
     <div class='wrapper'>
         <!-- Sidebar dengan Header Kiri di dalamnya -->
         <aside class='sidebar sidebar-expanded' id='sidebar'>
@@ -202,6 +252,28 @@ function get_katalog_header($title) {
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
 </head>
 <body>
+    <!-- Page Loader -->
+    <div id='pageLoader' class='page-loader'>
+        <div class='loader-overlay'></div>
+        <div class='loader-spinner'></div>
+    </div>
+    
+    <!-- Custom Confirmation Modal -->
+    <div id='confirmModal' class='confirm-modal'>
+        <div class='confirm-modal-content'>
+            <div class='confirm-modal-header'>
+                <i class='fas fa-exclamation-triangle'></i>
+                <h3>Konfirmasi</h3>
+            </div>
+            <div class='confirm-modal-body'>
+                <p id='confirmMessage'></p>
+            </div>
+            <div class='confirm-modal-footer'>
+                <button class='confirm-btn confirm-btn-secondary' id='confirmCancel'>Batal</button>
+                <button class='confirm-btn confirm-btn-primary' id='confirmOK'>OK</button>
+            </div>
+        </div>
+    </div>
     <div class='katalog-wrapper'>
         <header class='katalog-header'>
             <h1>Katalog Buku SMAN 1 Mandau</h1>

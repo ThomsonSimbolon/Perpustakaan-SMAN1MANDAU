@@ -425,10 +425,22 @@ a:hover {
   white-space: nowrap;
 }
 
-.nav-item a:hover,
+.nav-item a:hover {
+  background-color: var(--bg-elevated);
+  text-decoration: none;
+  color: var(--color-primary);
+}
+
 .nav-item.active a {
   background-color: var(--bg-elevated);
   text-decoration: none;
+  color: var(--color-primary);
+  font-weight: 600;
+  border-left: 3px solid var(--color-primary);
+  padding-left: 12px; /* Kurangi padding kiri karena ada border */
+}
+
+.nav-item.active a i {
   color: var(--color-primary);
 }
 
@@ -454,6 +466,14 @@ a:hover {
 .sidebar-collapsed .nav-item a {
   justify-content: center;
   padding: 12px;
+}
+
+/* Active state saat sidebar collapsed */
+.sidebar-collapsed .nav-item.active a {
+  border-left: none;
+  border-top: 3px solid var(--color-primary);
+  padding-left: 12px;
+  padding-top: 9px; /* Kurangi padding top karena ada border */
 }
 
 /* Tooltip for collapsed sidebar */
@@ -1137,4 +1157,196 @@ a:hover {
   content: "\f030";
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
+}
+
+/* =====================================================
+   PAGE LOADER SPINNER
+   ===================================================== */
+
+.page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.page-loader.active {
+  display: flex;
+  opacity: 1;
+}
+
+.loader-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.loader-spinner {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  z-index: 10000;
+}
+
+.loader-spinner::before,
+.loader-spinner::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  border-top-color: var(--color-primary);
+  animation: spin 1s linear infinite;
+}
+
+.loader-spinner::before {
+  width: 60px;
+  height: 60px;
+  border-width: 4px;
+  border-top-color: var(--color-primary);
+  border-right-color: var(--color-primary);
+  opacity: 0.3;
+}
+
+.loader-spinner::after {
+  width: 40px;
+  height: 40px;
+  top: 10px;
+  left: 10px;
+  border-width: 3px;
+  border-top-color: var(--color-primary);
+  animation-duration: 0.8s;
+  animation-direction: reverse;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Dark mode compatibility - loader automatically adapts via CSS variables */
+
+/* =====================================================
+   CUSTOM CONFIRMATION MODAL
+   ===================================================== */
+
+.confirm-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.confirm-modal.active {
+  display: flex;
+  opacity: 1;
+}
+
+.confirm-modal-content {
+  background-color: var(--bg-card);
+  margin: auto;
+  padding: 0;
+  border-radius: var(--radius-md);
+  width: 90%;
+  max-width: 450px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  transform: scale(0.9);
+  transition: transform var(--transition-fast);
+}
+
+.confirm-modal.active .confirm-modal-content {
+  transform: scale(1);
+}
+
+.confirm-modal-header {
+  padding: 20px 25px;
+  background-color: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.confirm-modal-header i {
+  font-size: 1.5em;
+  color: var(--color-warning);
+}
+
+.confirm-modal-header h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.confirm-modal-body {
+  padding: 25px;
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-size: 1em;
+}
+
+.confirm-modal-footer {
+  padding: 15px 25px;
+  background-color: var(--bg-elevated);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.confirm-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.95em;
+  font-weight: 600;
+  transition: var(--transition-fast);
+  min-width: 100px;
+}
+
+.confirm-btn-primary {
+  background-color: var(--color-primary);
+  color: #022c22;
+}
+
+.confirm-btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.confirm-btn-secondary {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.confirm-btn-secondary:hover {
+  background-color: var(--bg-elevated);
 }
