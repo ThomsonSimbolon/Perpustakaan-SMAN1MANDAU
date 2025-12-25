@@ -53,48 +53,145 @@ echo get_header("Laporan Perpustakaan", $_SESSION['role']);
 ?>
 
 <style>
-    @media print {
-        .no-print {
-            display: none !important;
-        }
-        .content-area {
-            padding: 0;
-        }
-        body {
-            background: white;
-        }
+@media print {
+    .no-print {
+        display: none !important;
     }
-    .filter-section {
-        background: var(--bg-card);
-        padding: 20px;
-        border-radius: var(--radius-md);
-        margin-bottom: 20px;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--border-color);
+
+    .content-area {
+        padding: 0;
     }
-    .filter-section h3 {
-        margin-bottom: 15px;
-        color: var(--color-primary);
+
+    body {
+        background: white;
     }
+}
+
+.filter-section {
+    background: var(--bg-card);
+    padding: 25px;
+    border-radius: var(--radius-md);
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.filter-section h3 {
+    margin-bottom: 20px;
+    color: var(--color-primary);
+    font-size: 1.3em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-section h3::before {
+    content: '\f0b0';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    font-size: 1.1em;
+}
+
+.filter-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 20px;
+    align-items: flex-end;
+}
+
+.filter-form .form-group {
+    margin-bottom: 0;
+}
+
+.filter-form .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95em;
+}
+
+.filter-form .form-group input[type="date"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 1em;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    transition: var(--transition-fast);
+    cursor: pointer;
+    height: 48px;
+    box-sizing: border-box;
+}
+
+.filter-form .form-group input[type="date"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 220, 130, 0.1);
+}
+
+.filter-form .form-group input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.7;
+    filter: invert(0);
+}
+
+.dark .filter-form .form-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.8;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.filter-buttons .btn {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 0.95em;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    height: 48px;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
     .filter-form {
-        display: flex;
+        grid-template-columns: 1fr;
         gap: 15px;
-        align-items: flex-end;
     }
-    .filter-form .form-group {
+
+    .filter-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .filter-buttons .btn {
         flex: 1;
-        margin-bottom: 0;
     }
-    .report-section {
-        margin-bottom: 40px;
-        page-break-inside: avoid;
-    }
-    .report-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
+}
+
+.report-section {
+    margin-bottom: 40px;
+    page-break-inside: avoid;
+}
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
 </style>
 
 <div class="no-print">
@@ -102,16 +199,28 @@ echo get_header("Laporan Perpustakaan", $_SESSION['role']);
         <h3>Filter Laporan</h3>
         <form method="GET" action="laporan.php" class="filter-form">
             <div class="form-group">
-                <label for="tanggal_pinjam">Filter Tanggal Peminjaman</label>
-                <input type="date" name="tanggal_pinjam" id="tanggal_pinjam" value="<?php echo $filter_tanggal_pinjam; ?>">
+                <label for="tanggal_pinjam">
+                    <i class="fas fa-calendar-alt" style="margin-right: 8px;"></i>
+                    Filter Tanggal Peminjaman
+                </label>
+                <input type="date" name="tanggal_pinjam" id="tanggal_pinjam"
+                    value="<?php echo $filter_tanggal_pinjam; ?>">
             </div>
             <div class="form-group">
-                <label for="tanggal_kembali">Filter Tanggal Pengembalian</label>
-                <input type="date" name="tanggal_kembali" id="tanggal_kembali" value="<?php echo $filter_tanggal_kembali; ?>">
+                <label for="tanggal_kembali">
+                    <i class="fas fa-calendar-check" style="margin-right: 8px;"></i>
+                    Filter Tanggal Pengembalian
+                </label>
+                <input type="date" name="tanggal_kembali" id="tanggal_kembali"
+                    value="<?php echo $filter_tanggal_kembali; ?>">
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="icon-search"></i> Filter</button>
-                <a href="laporan.php" class="btn btn-secondary"><i class="icon-refresh"></i> Reset</a>
+            <div class="filter-buttons">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Filter
+                </button>
+                <a href="laporan.php" class="btn btn-secondary" style="text-decoration: none;">
+                    <i class="fas fa-redo"></i> Reset
+                </a>
             </div>
         </form>
     </div>
@@ -142,34 +251,35 @@ echo get_header("Laporan Perpustakaan", $_SESSION['role']);
             </thead>
             <tbody>
                 <?php if (empty($laporan_peminjaman)): ?>
-                    <tr>
-                        <td colspan="9" style="text-align: center; padding: 20px;">Tidak ada data peminjaman</td>
-                    </tr>
+                <tr>
+                    <td colspan="9" style="text-align: center; padding: 20px;">Tidak ada data peminjaman</td>
+                </tr>
                 <?php else: ?>
-                    <?php foreach ($laporan_peminjaman as $lp): ?>
-                    <tr>
-                        <td><?php echo $lp['id_peminjaman']; ?></td>
-                        <td><?php echo date('d-m-Y', strtotime($lp['tanggal_pinjam'])); ?></td>
-                        <td><?php echo date('d-m-Y', strtotime($lp['tanggal_kembali_harus'])); ?></td>
-                        <td><?php echo $lp['nama_anggota']; ?></td>
-                        <td><?php echo ucfirst($lp['jenis_anggota']); ?></td>
-                        <td><?php echo $lp['kelas'] ?? '-'; ?></td>
-                        <td><?php echo $lp['kode_buku']; ?></td>
-                        <td><?php echo $lp['judul_buku']; ?></td>
-                        <td>
-                            <?php if ($lp['status'] == 'AKTIF'): ?>
-                                <span class="status-badge status-dipinjam"><?php echo $lp['status']; ?></span>
-                            <?php else: ?>
-                                <span class="status-badge status-tersedia"><?php echo $lp['status']; ?></span>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
+                <?php foreach ($laporan_peminjaman as $lp): ?>
+                <tr>
+                    <td><?php echo $lp['id_peminjaman']; ?></td>
+                    <td><?php echo date('d-m-Y', strtotime($lp['tanggal_pinjam'])); ?></td>
+                    <td><?php echo date('d-m-Y', strtotime($lp['tanggal_kembali_harus'])); ?></td>
+                    <td><?php echo $lp['nama_anggota']; ?></td>
+                    <td><?php echo ucfirst($lp['jenis_anggota']); ?></td>
+                    <td><?php echo $lp['kelas'] ?? '-'; ?></td>
+                    <td><?php echo $lp['kode_buku']; ?></td>
+                    <td><?php echo $lp['judul_buku']; ?></td>
+                    <td>
+                        <?php if ($lp['status'] == 'AKTIF'): ?>
+                        <span class="status-badge status-dipinjam"><?php echo $lp['status']; ?></span>
+                        <?php else: ?>
+                        <span class="status-badge status-tersedia"><?php echo $lp['status']; ?></span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
-    <p style="margin-top: 10px;"><strong>Total Peminjaman:</strong> <?php echo count($laporan_peminjaman); ?> transaksi</p>
+    <p style="margin-top: 10px;"><strong>Total Peminjaman:</strong> <?php echo count($laporan_peminjaman); ?> transaksi
+    </p>
 </div>
 
 <!-- Laporan Pengembalian -->
@@ -194,27 +304,27 @@ echo get_header("Laporan Perpustakaan", $_SESSION['role']);
             </thead>
             <tbody>
                 <?php if (empty($laporan_pengembalian)): ?>
-                    <tr>
-                        <td colspan="9" style="text-align: center; padding: 20px;">Tidak ada data pengembalian</td>
-                    </tr>
+                <tr>
+                    <td colspan="9" style="text-align: center; padding: 20px;">Tidak ada data pengembalian</td>
+                </tr>
                 <?php else: ?>
-                    <?php 
+                <?php 
                     $total_denda = 0;
                     foreach ($laporan_pengembalian as $lk): 
                         $total_denda += $lk['denda'];
                     ?>
-                    <tr>
-                        <td><?php echo $lk['id_pengembalian']; ?></td>
-                        <td><?php echo $lk['id_peminjaman']; ?></td>
-                        <td><?php echo date('d-m-Y', strtotime($lk['tanggal_pinjam'])); ?></td>
-                        <td><?php echo date('d-m-Y', strtotime($lk['tanggal_kembali'])); ?></td>
-                        <td><?php echo $lk['nama_anggota']; ?></td>
-                        <td><?php echo ucfirst($lk['jenis_anggota']); ?></td>
-                        <td><?php echo $lk['kode_buku']; ?></td>
-                        <td><?php echo $lk['judul_buku']; ?></td>
-                        <td>Rp <?php echo number_format($lk['denda'], 0, ',', '.'); ?></td>
-                    </tr>
-                    <?php endforeach; ?>
+                <tr>
+                    <td><?php echo $lk['id_pengembalian']; ?></td>
+                    <td><?php echo $lk['id_peminjaman']; ?></td>
+                    <td><?php echo date('d-m-Y', strtotime($lk['tanggal_pinjam'])); ?></td>
+                    <td><?php echo date('d-m-Y', strtotime($lk['tanggal_kembali'])); ?></td>
+                    <td><?php echo $lk['nama_anggota']; ?></td>
+                    <td><?php echo ucfirst($lk['jenis_anggota']); ?></td>
+                    <td><?php echo $lk['kode_buku']; ?></td>
+                    <td><?php echo $lk['judul_buku']; ?></td>
+                    <td>Rp <?php echo number_format($lk['denda'], 0, ',', '.'); ?></td>
+                </tr>
+                <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>
@@ -226,7 +336,8 @@ echo get_header("Laporan Perpustakaan", $_SESSION['role']);
 </div>
 
 <div class="no-print" style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
-    <p><strong>Catatan:</strong> Gunakan tombol "Cetak Laporan" untuk mencetak halaman ini. Pastikan filter tanggal sudah diatur sesuai kebutuhan sebelum mencetak.</p>
+    <p><strong>Catatan:</strong> Gunakan tombol "Cetak Laporan" untuk mencetak halaman ini. Pastikan filter tanggal
+        sudah diatur sesuai kebutuhan sebelum mencetak.</p>
 </div>
 
 <?php

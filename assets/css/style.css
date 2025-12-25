@@ -911,6 +911,17 @@ a:hover {
   color: var(--text-inverted);
 }
 
+.btn-secondary {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-muted);
+  opacity: 1;
+}
+
 /* Modal Styling */
 .modal {
   display: none; /* Hidden by default */
