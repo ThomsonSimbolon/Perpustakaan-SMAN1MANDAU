@@ -11,7 +11,9 @@ Sistem Informasi Perpustakaan berbasis web yang dikembangkan menggunakan PHP Nat
 5. [Role & Hak Akses](#role--hak-akses)
 6. [Panduan Pengujian](#panduan-pengujian)
 7. [UI/UX Design & Color Scheme](#uiux-design--color-scheme)
-8. [Troubleshooting](#troubleshooting)
+8. [Keamanan & Autentikasi](#keamanan--autentikasi)
+9. [Troubleshooting](#troubleshooting)
+10. [Changelog](#changelog)
 
 ---
 
@@ -823,7 +825,7 @@ Sistem menggunakan **Font Awesome 5** untuk icons:
 
 ## 📝 Catatan Penting
 
-1. **Password Security:** Password saat ini disimpan dalam plain text untuk kemudahan testing. Untuk production, gunakan password hashing (password_hash/password_verify).
+1. **Password Security:** Password pengguna disimpan menggunakan hashing dengan fungsi password_hash() dan diverifikasi menggunakan password_verify() untuk meningkatkan keamanan sistem. Lihat detail di bagian [Keamanan & Autentikasi](#keamanan--autentikasi).
 
 2. **QR Code Format:** Format QR Code adalah `ID_PINJAM:{id}|ID_ANGGOTA:{id}|KODE_BUKU:{kode}`. Format ini digunakan untuk scanning saat pengembalian.
 
@@ -832,6 +834,181 @@ Sistem menggunakan **Font Awesome 5** untuk icons:
 4. **Status Buku:** Status buku hanya 2: `TERSEDIA` atau `DIPINJAM`. Status otomatis berubah saat peminjaman/pengembalian.
 
 5. **Login Wajib:** Semua role wajib login. Tidak ada akses tanpa login (kecuali halaman login itu sendiri).
+
+---
+
+## 🔒 Keamanan & Autentikasi
+
+### Implementasi Password Hashing
+
+Sistem menggunakan **password hashing** sesuai standar keamanan PHP untuk melindungi data password pengguna.
+
+#### Teknologi yang Digunakan
+
+- **Fungsi Hashing:** `password_hash()` dengan algoritma `PASSWORD_DEFAULT`
+- **Fungsi Verifikasi:** `password_verify()`
+- **Algoritma:** bcrypt (default di PHP 7.4+)
+
+#### Implementasi di Sistem
+
+**1. Proses Registrasi/Tambah User (`admin/users.php`)**
+
+```php
+// Saat tambah user baru
+$password_hash = password_hash($password, PASSWORD_DEFAULT);
+$stmt = $conn->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
+$stmt->bind_param("sss", $username, $password_hash, $role);
+```
+
+- Password di-hash sebelum disimpan ke database
+- Password wajib diisi saat registrasi
+- Hash otomatis menggunakan salt yang di-generate oleh PHP
+
+**2. Proses Edit User (`admin/users.php`)**
+
+```php
+// Saat edit user dengan password baru
+if (!empty($password)) {
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+    // Update password dengan hash baru
+}
+```
+
+- Password hanya di-update jika diisi (opsional)
+- Jika kosong, password lama tetap digunakan
+- Password baru selalu di-hash sebelum disimpan
+
+**3. Proses Login (`auth/login.php`)**
+
+```php
+// Verifikasi password saat login
+if (password_verify($password, $user['password'])) {
+    // Login sukses - set session
+} else {
+    // Login gagal
+}
+```
+
+- Password input user dibandingkan dengan hash di database
+- Menggunakan `password_verify()` untuk validasi yang aman
+- Tidak ada password yang tersimpan dalam bentuk plain text
+
+#### Keamanan yang Diterapkan
+
+✅ **Password Hashing:** Semua password di-hash menggunakan bcrypt  
+✅ **Prepared Statements:** Mencegah SQL Injection  
+✅ **Input Sanitization:** Semua input di-sanitize untuk mencegah XSS  
+✅ **Session Management:** Menggunakan session PHP untuk autentikasi  
+✅ **Role-Based Access Control:** Setiap role memiliki akses terbatas
+
+#### Struktur Database
+
+Kolom `password` di tabel `users` menggunakan tipe data `VARCHAR(255)` yang cukup untuk menyimpan hash bcrypt (panjang hash bcrypt adalah 60 karakter).
+
+```sql
+CREATE TABLE users (
+    id_user INT(11) NOT NULL AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL, -- Menyimpan password hash
+    role ENUM('admin', 'pustakawan', 'siswa', 'guru') NOT NULL,
+    PRIMARY KEY (id_user)
+);
+```
+
+#### Migrasi dari Plain Text (Opsional)
+
+Jika terdapat user lama dengan password plain text, sistem tidak akan bisa login dengan password tersebut setelah update. Solusi:
+
+**Opsi 1: Reset Password Manual**
+
+- Login sebagai admin
+- Edit user yang bersangkutan
+- Isi password baru
+- Password akan otomatis di-hash
+
+**Opsi 2: Migrasi Otomatis (Dapat Ditambahkan)**
+
+- Deteksi password plain text saat login
+- Verifikasi dengan `===` untuk password lama
+- Hash ulang dan update ke database
+- Login berikutnya menggunakan `password_verify()`
+
+#### Best Practices yang Diterapkan
+
+1. ✅ Menggunakan `PASSWORD_DEFAULT` (otomatis menggunakan algoritma terbaik)
+2. ✅ Tidak pernah menyimpan password plain text
+3. ✅ Tidak pernah menampilkan password di log atau error message
+4. ✅ Validasi password wajib diisi saat registrasi
+5. ✅ Prepared statement untuk semua query database
+
+---
+
+## 📋 Changelog
+
+### Versi 1.1 - Desember 2025
+
+#### 🔒 Perbaikan Keamanan Autentikasi
+
+**Perubahan Utama:**
+
+- ✅ **Implementasi Password Hashing:** Mengganti penyimpanan password dari plain text ke password hashing menggunakan `password_hash()` dan `password_verify()`
+- ✅ **Keamanan Meningkat:** Password tidak lagi tersimpan dalam bentuk yang dapat dibaca
+- ✅ **Standar Keamanan PHP:** Mengikuti best practice keamanan PHP modern
+
+**File yang Diubah:**
+
+1. **`auth/login.php`**
+
+   - Mengganti validasi password dari `$password === $user['password']` menjadi `password_verify($password, $user['password'])`
+   - Menghapus komentar yang menyebutkan plain text
+   - Login sekarang menggunakan verifikasi password yang aman
+
+2. **`admin/users.php`**
+
+   - **Tambah User:** Menambahkan `password_hash()` sebelum menyimpan password baru
+   - **Edit User:** Menambahkan `password_hash()` saat update password (jika diisi)
+   - **Validasi:** Password wajib diisi saat tambah user baru
+   - **UI:** Menambahkan indikator visual untuk password wajib/opsional
+
+3. **`README.md`**
+   - Menambahkan dokumentasi lengkap tentang keamanan dan autentikasi
+   - Menambahkan bagian Changelog
+   - Memperbarui catatan penting tentang password security
+
+**Dampak Perubahan:**
+
+- ✅ **Keamanan:** Sistem lebih aman dan sesuai standar keamanan PHP
+- ✅ **Kompatibilitas:** User baru yang dibuat setelah update akan menggunakan password hashing
+- ⚠️ **User Lama:** User dengan password plain text perlu reset password melalui admin
+
+**Cara Migrasi User Lama:**
+
+1. Login sebagai admin
+2. Akses menu "Kelola User"
+3. Edit user yang perlu di-migrate
+4. Isi password baru
+5. Simpan (password akan otomatis di-hash)
+
+**Catatan Teknis:**
+
+- Algoritma hashing: bcrypt (PASSWORD_DEFAULT)
+- Panjang hash: 60 karakter
+- Kolom database: VARCHAR(255) - sudah cukup
+- Tidak ada perubahan struktur database
+
+---
+
+### Versi 1.0 - Desember 2025
+
+**Fitur Awal:**
+
+- Sistem Informasi Perpustakaan berbasis web
+- Multi-role access (Admin, Pustakawan, Siswa, Guru)
+- Manajemen data buku, anggota, dan user
+- Transaksi peminjaman dengan QR Code
+- Transaksi pengembalian dengan scan QR Code
+- Katalog online untuk siswa/guru
+- Laporan peminjaman dan pengembalian
 
 ---
 
@@ -855,13 +1032,31 @@ Library PHP QR Code menggunakan lisensi LGPL 3.0.
 
 ## 👨‍💻 Developer Notes
 
-- Database menggunakan foreign key dengan ON DELETE CASCADE
-- Semua input user di-sanitize untuk mencegah XSS
-- Prepared statement digunakan untuk mencegah SQL Injection
-- Session management untuk authentication
-- QR Code disimpan sebagai file PNG untuk performa
+### Keamanan & Best Practices
+
+- **Password Hashing:** Menggunakan `password_hash()` dengan `PASSWORD_DEFAULT` (bcrypt) untuk menyimpan password
+- **Password Verification:** Menggunakan `password_verify()` untuk validasi login
+- **Prepared Statements:** Semua query database menggunakan prepared statement untuk mencegah SQL Injection
+- **Input Sanitization:** Semua input user di-sanitize menggunakan `sanitize_input()` untuk mencegah XSS
+- **Session Management:** Menggunakan session PHP untuk authentication dan role-based access control
+- **Database Security:** Foreign key dengan ON DELETE CASCADE untuk integritas data
+- **File Storage:** QR Code disimpan sebagai file PNG untuk performa
+
+### Struktur Kode
+
+- **PHP Native:** Tidak menggunakan framework, kode murni PHP
+- **MVC Pattern:** Pemisahan logika (config), view (HTML), dan controller (PHP)
+- **Reusable Functions:** Fungsi helper di `config/functions.php`
+- **Modular Design:** Setiap fitur dalam file terpisah untuk kemudahan maintenance
+
+### Database Design
+
+- **Normalization:** Database ter-normalisasi dengan foreign key
+- **Data Types:** Menggunakan tipe data yang sesuai (ENUM untuk role, VARCHAR untuk string)
+- **Indexes:** Primary key dan unique constraint untuk optimasi query
 
 ---
 
-**Versi Dokumen:** 1.0  
-**Terakhir Diupdate:** Desember 2025
+**Versi Dokumen:** 1.1  
+**Terakhir Diupdate:** Desember 2025  
+**Perubahan Terakhir:** Implementasi Password Hashing untuk Keamanan Autentikasi

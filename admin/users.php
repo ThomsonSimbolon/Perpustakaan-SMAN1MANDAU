@@ -20,20 +20,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
     $id_user = isset($_POST['id_user']) ? (int)$_POST['id_user'] : 0;
 
     if ($action == 'add') {
-        // Cek apakah username sudah ada
-        $stmt_check = $conn->prepare("SELECT id_user FROM users WHERE username = ?");
-        $stmt_check->bind_param("s", $username);
-        $stmt_check->execute();
-        if ($stmt_check->get_result()->num_rows > 0) {
-            $message = show_alert('error', 'Username sudah digunakan.');
+        // Validasi password wajib diisi saat tambah user
+        if (empty($password)) {
+            $message = show_alert('error', 'Password wajib diisi.');
         } else {
-            // Password di dunia nyata harus di-hash (password_hash)
-            $stmt = $conn->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
-            $stmt->bind_param("sss", $username, $password, $role);
-            if ($stmt->execute()) {
-                $message = show_alert('success', 'Pengguna berhasil ditambahkan.');
+            // Cek apakah username sudah ada
+            $stmt_check = $conn->prepare("SELECT id_user FROM users WHERE username = ?");
+            $stmt_check->bind_param("s", $username);
+            $stmt_check->execute();
+            if ($stmt_check->get_result()->num_rows > 0) {
+                $message = show_alert('error', 'Username sudah digunakan.');
             } else {
-                $message = show_alert('error', 'Gagal menambahkan pengguna: ' . $stmt->error);
+                // Hash password menggunakan password_hash() dengan PASSWORD_DEFAULT
+                $password_hash = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = $conn->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
+                $stmt->bind_param("sss", $username, $password_hash, $role);
+                if ($stmt->execute()) {
+                    $message = show_alert('success', 'Pengguna berhasil ditambahkan.');
+                } else {
+                    $message = show_alert('error', 'Gagal menambahkan pengguna: ' . $stmt->error);
+                }
             }
         }
     } elseif ($action == 'edit' && $id_user > 0) {
@@ -42,8 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
         $types = "ss";
 
         if (!empty($password)) {
+            // Hash password baru menggunakan password_hash() dengan PASSWORD_DEFAULT
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
             $sql .= ", password = ?";
-            $params[] = $password;
+            $params[] = $password_hash;
             $types .= "s";
         }
 
@@ -105,15 +113,13 @@ echo get_header("Kelola Pengguna", $_SESSION['role']);
                 <td><?php echo $user['username']; ?></td>
                 <td><?php echo ucfirst($user['role']); ?></td>
                 <td>
-                    <button class="btn btn-primary btn-sm" 
-                            data-modal-target="modalAddEdit" 
-                            data-id="<?php echo $user['id_user']; ?>"
-                            data-username="<?php echo $user['username']; ?>"
-                            data-role="<?php echo $user['role']; ?>"
-                            onclick="editUser(this)"><i class="icon-edit"></i> Edit</button>
-                    <a href="users.php?delete_id=<?php echo $user['id_user']; ?>" 
-                       class="btn btn-danger btn-sm" 
-                       onclick="return confirm('Yakin ingin menghapus pengguna ini?');"><i class="icon-trash"></i> Hapus</a>
+                    <button class="btn btn-primary btn-sm" data-modal-target="modalAddEdit"
+                        data-id="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>"
+                        data-role="<?php echo $user['role']; ?>" onclick="editUser(this)"><i class="icon-edit"></i>
+                        Edit</button>
+                    <a href="users.php?delete_id=<?php echo $user['id_user']; ?>" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Yakin ingin menghapus pengguna ini?');"><i class="icon-trash"></i>
+                        Hapus</a>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -129,17 +135,18 @@ echo get_header("Kelola Pengguna", $_SESSION['role']);
         <form method="POST" action="users.php" class="modal-form">
             <input type="hidden" name="action" id="formAction" value="add">
             <input type="hidden" name="id_user" id="userId">
-            
+
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" name="username" id="username" required>
             </div>
-            
+
             <div class="form-group">
-                <label for="password">Password (Kosongkan jika tidak diubah)</label>
+                <label for="password">Password <span id="passwordRequired" style="color: red;">*</span><span
+                        id="passwordOptional">(Kosongkan jika tidak diubah)</span></label>
                 <input type="password" name="password" id="password">
             </div>
-            
+
             <div class="form-group">
                 <label for="role">Role</label>
                 <select name="role" id="role" required>
@@ -149,7 +156,7 @@ echo get_header("Kelola Pengguna", $_SESSION['role']);
                     <option value="guru">Guru</option>
                 </select>
             </div>
-            
+
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success">Simpan</button>
             </div>
@@ -158,33 +165,39 @@ echo get_header("Kelola Pengguna", $_SESSION['role']);
 </div>
 
 <script>
-    // Fungsi untuk mengisi form modal saat edit
-    function editUser(button) {
-        document.getElementById('modalTitle').innerText = 'Edit Pengguna';
-        document.getElementById('formAction').value = 'edit';
-        document.getElementById('userId').value = button.getAttribute('data-id');
-        document.getElementById('username').value = button.getAttribute('data-username');
-        document.getElementById('role').value = button.getAttribute('data-role');
-        document.getElementById('password').value = ''; // Kosongkan password saat edit
-        
-        // Tampilkan modal
-        document.getElementById('modalAddEdit').style.display = 'block';
-    }
+// Fungsi untuk mengisi form modal saat edit
+function editUser(button) {
+    document.getElementById('modalTitle').innerText = 'Edit Pengguna';
+    document.getElementById('formAction').value = 'edit';
+    document.getElementById('userId').value = button.getAttribute('data-id');
+    document.getElementById('username').value = button.getAttribute('data-username');
+    document.getElementById('role').value = button.getAttribute('data-role');
+    document.getElementById('password').value = ''; // Kosongkan password saat edit
+    document.getElementById('password').required = false; // Password tidak wajib saat edit
+    document.getElementById('passwordRequired').style.display = 'none';
+    document.getElementById('passwordOptional').style.display = 'inline';
 
-    // Reset form saat tombol tambah diklik
-    document.addEventListener('DOMContentLoaded', function() {
-        const addButton = document.querySelector('[data-modal-target="modalAddEdit"]');
-        if (addButton) {
-            addButton.addEventListener('click', function() {
-                document.getElementById('modalTitle').innerText = 'Tambah Pengguna Baru';
-                document.getElementById('formAction').value = 'add';
-                document.getElementById('userId').value = '';
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-                document.getElementById('role').value = 'siswa'; // Default role
-            });
-        }
-    });
+    // Tampilkan modal
+    document.getElementById('modalAddEdit').style.display = 'block';
+}
+
+// Reset form saat tombol tambah diklik
+document.addEventListener('DOMContentLoaded', function() {
+    const addButton = document.querySelector('[data-modal-target="modalAddEdit"]');
+    if (addButton) {
+        addButton.addEventListener('click', function() {
+            document.getElementById('modalTitle').innerText = 'Tambah Pengguna Baru';
+            document.getElementById('formAction').value = 'add';
+            document.getElementById('userId').value = '';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('password').required = true; // Password wajib saat tambah
+            document.getElementById('passwordRequired').style.display = 'inline';
+            document.getElementById('passwordOptional').style.display = 'none';
+            document.getElementById('role').value = 'siswa'; // Default role
+        });
+    }
+});
 </script>
 
 <?php
