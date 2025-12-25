@@ -1,0 +1,486 @@
+/* File: perpustakaan/assets/css/style.css */
+
+/* Global Reset and Typography */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --primary-color: #003366; /* Navy Blue - Nuansa Pendidikan */
+    --secondary-color: #007bff; /* Bright Blue */
+    --background-color: #f4f7f6;
+    --card-background: #ffffff;
+    --text-color: #333;
+    --success-color: #28a745; /* Hijau untuk TERSEDIA */
+    --danger-color: #dc3545; /* Merah untuk DIPINJAM */
+    --border-color: #ddd;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: var(--secondary-color);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Login Page Styling */
+.login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+}
+
+.login-container {
+    background: var(--card-background);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-container h2 {
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.login-container h3 {
+    color: #6c757d;
+    margin-bottom: 25px;
+    font-weight: 400;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: var(--danger-color);
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.katalog-link {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* Main Layout (Sidebar) */
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-header h3 {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}
+
+.sidebar-header p {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.nav-links {
+    list-style: none;
+}
+
+.nav-item a {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    color: white;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    transition: background-color 0.3s;
+}
+
+.nav-item a:hover,
+.nav-item.active a {
+    background-color: rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+}
+
+.nav-item a i {
+    margin-right: 10px;
+    font-size: 1.1em;
+}
+
+/* Main Content Area */
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.main-header {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.content-area {
+    padding: 10px;
+}
+
+/* Dashboard Card Styling */
+.card-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: var(--card-background);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    flex: 1;
+    min-width: 200px;
+    text-align: center;
+}
+
+.card h4 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.card .value {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+/* Table Styling (Responsive) */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: var(--card-background);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.data-table th, .data-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.85em;
+    text-transform: uppercase;
+}
+
+.status-tersedia {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.status-dipinjam {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+/* Button Styling */
+.btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-right: 5px;
+    transition: opacity 0.3s;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+/* Modal Styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* 10% from the top and centered */
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-content h3 {
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.modal-form .form-group {
+    margin-bottom: 15px;
+}
+
+.modal-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.modal-form input, .modal-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+
+.modal-footer {
+    margin-top: 20px;
+    text-align: right;
+}
+
+/* Katalog Styling (Siswa/Guru) */
+.katalog-wrapper {
+    padding: 0;
+}
+
+.katalog-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.katalog-header h1 {
+    font-size: 1.8em;
+}
+
+.katalog-header nav a {
+    color: white;
+    margin-left: 20px;
+    font-weight: 500;
+}
+
+.katalog-header nav a:hover {
+    text-decoration: underline;
+}
+
+.katalog-content {
+    padding: 20px 40px;
+}
+
+.katalog-search-bar {
+    margin-bottom: 30px;
+    display: flex;
+    gap: 10px;
+}
+
+.katalog-search-bar input[type="text"] {
+    flex-grow: 1;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.katalog-search-bar button {
+    padding: 12px 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.book-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.book-card {
+    background: var(--card-background);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+}
+
+.book-card h4 {
+    color: var(--primary-color);
+    margin-bottom: 5px;
+    font-size: 1.2em;
+}
+
+.book-card p {
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.book-card .status {
+    margin-top: 10px;
+}
+
+.katalog-footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #e9ecef;
+    color: var(--text-color);
+    margin-top: 30px;
+}
+
+/* Utility Classes for Icons (Font Awesome) */
+.icon-home:before { content: "\f015"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-users:before { content: "\f0c0"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-book:before { content: "\f02d"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-user-plus:before { content: "\f234"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-arrow-up:before { content: "\f062"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-arrow-down:before { content: "\f063"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-file-text:before { content: "\f15c"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-log-out:before { content: "\f08b"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-search:before { content: "\f002"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-plus:before { content: "\f067"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-edit:before { content: "\f044"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-trash:before { content: "\f1f8"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-print:before { content: "\f02f"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-qrcode:before { content: "\f029"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+.icon-camera:before { content: "\f030"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
