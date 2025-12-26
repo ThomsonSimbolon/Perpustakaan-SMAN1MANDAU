@@ -111,6 +111,7 @@ echo get_header("Kelola Data Buku", $_SESSION['role']);
     <table class="data-table">
         <thead>
             <tr>
+                <th>No.</th>
                 <th>Kode Buku</th>
                 <th>Judul</th>
                 <th>Pengarang</th>
@@ -121,8 +122,9 @@ echo get_header("Kelola Data Buku", $_SESSION['role']);
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($buku as $b): ?>
+            <?php $no = 1; foreach ($buku as $b): ?>
             <tr>
+                <td><?php echo $no++; ?></td>
                 <td><?php echo $b['kode_buku']; ?></td>
                 <td><?php echo $b['judul']; ?></td>
                 <td><?php echo $b['pengarang']; ?></td>

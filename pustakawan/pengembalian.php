@@ -182,6 +182,7 @@ echo get_header("Transaksi Pengembalian", $_SESSION['role']);
     <table class="data-table">
         <thead>
             <tr>
+                <th>No.</th>
                 <th>ID Pinjam</th>
                 <th>Anggota</th>
                 <th>Buku</th>
@@ -190,8 +191,9 @@ echo get_header("Transaksi Pengembalian", $_SESSION['role']);
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($pengembalian_selesai as $k): ?>
+            <?php $no = 1; foreach ($pengembalian_selesai as $k): ?>
             <tr>
+                <td><?php echo $no++; ?></td>
                 <td><?php echo $k['id_peminjaman']; ?></td>
                 <td><?php echo $k['nama_anggota']; ?></td>
                 <td><?php echo $k['judul_buku']; ?></td>

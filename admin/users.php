@@ -100,6 +100,7 @@ echo get_header("Kelola Pengguna", $_SESSION['role']);
     <table class="data-table">
         <thead>
             <tr>
+                <th>No.</th>
                 <th>ID</th>
                 <th>Username</th>
                 <th>Role</th>
@@ -107,8 +108,9 @@ echo get_header("Kelola Pengguna", $_SESSION['role']);
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($users as $user): ?>
+            <?php $no = 1; foreach ($users as $user): ?>
             <tr>
+                <td><?php echo $no++; ?></td>
                 <td><?php echo $user['id_user']; ?></td>
                 <td><?php echo $user['username']; ?></td>
                 <td><?php echo ucfirst($user['role']); ?></td>

@@ -1212,7 +1212,7 @@ a:hover {
 .data-table td {
   padding: 12px 15px;
   text-align: left;
-  border-bottom: 1px solid var(--border-color);
+  border: 1px solid var(--border-color);
 }
 
 .data-table th {
@@ -1221,10 +1221,6 @@ a:hover {
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.9em;
-}
-
-.data-table tr:last-child td {
-  border-bottom: none;
 }
 
 .data-table tbody tr:hover {

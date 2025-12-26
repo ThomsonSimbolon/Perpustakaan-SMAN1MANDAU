@@ -134,6 +134,7 @@ echo get_header("Kelola Anggota", $_SESSION['role']);
     <table class="data-table">
         <thead>
             <tr>
+                <th>No.</th>
                 <th>ID</th>
                 <th>Nama Lengkap</th>
                 <th>Jenis</th>
@@ -146,11 +147,12 @@ echo get_header("Kelola Anggota", $_SESSION['role']);
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($anggota as $a): 
+            <?php $no = 1; foreach ($anggota as $a): 
                 $nama_display = $a['nama_lengkap'] ?? $a['nama'] ?? '-';
                 $nis_nip = ($a['jenis_anggota'] == 'siswa') ? ($a['nis'] ?? '-') : ($a['nip'] ?? '-');
             ?>
             <tr>
+                <td><?php echo $no++; ?></td>
                 <td><?php echo $a['id_anggota']; ?></td>
                 <td><?php echo htmlspecialchars($nama_display); ?></td>
                 <td><?php echo ucfirst($a['jenis_anggota']); ?></td>

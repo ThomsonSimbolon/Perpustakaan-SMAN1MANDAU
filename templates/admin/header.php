@@ -30,9 +30,6 @@ require_once $shared_path . '/confirm-modal.php';
             <i class='fas fa-bars'></i>
         </button>
         <div class='header-right-items'>
-            <button class='icon-btn' id='notificationBtn' title='Notifikasi' aria-label='Notifikasi'>
-                <i class='fas fa-bell'></i>
-            </button>
             <button class='icon-btn' onclick='toggleTheme()' title='Dark Mode' aria-label='Toggle Dark Mode'>
                 <i class='fas fa-moon'></i>
             </button>

@@ -98,6 +98,7 @@ echo get_header("Laporan Perpustakaan", $_SESSION['role']);
         <table class="data-table">
             <thead>
                 <tr>
+                    <th>No.</th>
                     <th>ID Peminjaman</th>
                     <th>Tanggal Pinjam</th>
                     <th>Harus Kembali</th>
@@ -112,11 +113,12 @@ echo get_header("Laporan Perpustakaan", $_SESSION['role']);
             <tbody>
                 <?php if (empty($laporan_peminjaman)): ?>
                 <tr>
-                    <td colspan="9" style="text-align: center; padding: 20px;">Tidak ada data peminjaman</td>
+                    <td colspan="10" style="text-align: center; padding: 20px;">Tidak ada data peminjaman</td>
                 </tr>
                 <?php else: ?>
-                <?php foreach ($laporan_peminjaman as $lp): ?>
+                <?php $no = 1; foreach ($laporan_peminjaman as $lp): ?>
                 <tr>
+                    <td><?php echo $no++; ?></td>
                     <td><?php echo $lp['id_peminjaman']; ?></td>
                     <td><?php echo date('d-m-Y', strtotime($lp['tanggal_pinjam'])); ?></td>
                     <td><?php echo date('d-m-Y', strtotime($lp['tanggal_kembali_harus'])); ?></td>
@@ -151,6 +153,7 @@ echo get_header("Laporan Perpustakaan", $_SESSION['role']);
         <table class="data-table">
             <thead>
                 <tr>
+                    <th>No.</th>
                     <th>ID Pengembalian</th>
                     <th>ID Peminjaman</th>
                     <th>Tanggal Pinjam</th>
@@ -165,15 +168,17 @@ echo get_header("Laporan Perpustakaan", $_SESSION['role']);
             <tbody>
                 <?php if (empty($laporan_pengembalian)): ?>
                 <tr>
-                    <td colspan="9" style="text-align: center; padding: 20px;">Tidak ada data pengembalian</td>
+                    <td colspan="10" style="text-align: center; padding: 20px;">Tidak ada data pengembalian</td>
                 </tr>
                 <?php else: ?>
                 <?php 
                     $total_denda = 0;
+                    $no = 1;
                     foreach ($laporan_pengembalian as $lk): 
                         $total_denda += $lk['denda'];
                     ?>
                 <tr>
+                    <td><?php echo $no++; ?></td>
                     <td><?php echo $lk['id_pengembalian']; ?></td>
                     <td><?php echo $lk['id_peminjaman']; ?></td>
                     <td><?php echo date('d-m-Y', strtotime($lk['tanggal_pinjam'])); ?></td>

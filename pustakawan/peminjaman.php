@@ -120,6 +120,7 @@ echo get_header("Transaksi Peminjaman", $_SESSION['role']);
     <table class="data-table">
         <thead>
             <tr>
+                <th>No.</th>
                 <th>ID Pinjam</th>
                 <th>Anggota</th>
                 <th>Buku</th>
@@ -130,8 +131,9 @@ echo get_header("Transaksi Peminjaman", $_SESSION['role']);
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($peminjaman_aktif as $p): ?>
+            <?php $no = 1; foreach ($peminjaman_aktif as $p): ?>
             <tr>
+                <td><?php echo $no++; ?></td>
                 <td><?php echo $p['id_peminjaman']; ?></td>
                 <td><?php echo $p['nama_anggota']; ?> (<?php echo ucfirst($p['jenis_anggota']); ?>)</td>
                 <td><?php echo $p['judul_buku']; ?> (<?php echo $p['kode_buku']; ?>)</td>
