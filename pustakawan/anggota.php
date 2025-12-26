@@ -160,12 +160,11 @@ echo get_header("Kelola Anggota", $_SESSION['role']);
                 <td><?php echo $a['username'] ? htmlspecialchars($a['username']) : '<em>Belum di-link</em>'; ?></td>
                 <td><span class="status-badge status-<?php echo strtolower($a['status_aktif'] ?? 'AKTIF'); ?>"><?php echo $a['status_aktif'] ?? 'AKTIF'; ?></span></td>
                 <td>
-                    <button class="btn btn-primary btn-sm" 
+                    <button class="btn btn-warning btn-sm" 
                             data-modal-target="modalAddEdit" 
                             onclick="editAnggota(<?php echo htmlspecialchars(json_encode($a), ENT_QUOTES, 'UTF-8'); ?>)"><i class="icon-edit"></i> Edit</button>
                     <a href="anggota.php?delete_id=<?php echo $a['id_anggota']; ?>" 
-                       class="btn btn-danger btn-sm" 
-                       onclick="return confirm('Yakin ingin menghapus anggota ini? Semua data peminjaman terkait akan terhapus.');"><i class="icon-trash"></i> Hapus</a>
+                       class="btn btn-danger btn-sm"><i class="icon-trash"></i> Hapus</a>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -370,7 +369,7 @@ echo get_header("Kelola Anggota", $_SESSION['role']);
         }
         
         // Validasi id_user harus sesuai jenis_anggota saat form submit
-        document.getElementById('formAnggota').addEventListener('submit', function(e) {
+        document.getElementById('formAnggota').addEventListener('submit', async function(e) {
             const idUser = document.getElementById('id_user').value;
             const jenisAnggota = document.getElementById('jenis_anggota').value;
             const userSelect = document.getElementById('id_user');
@@ -381,7 +380,7 @@ echo get_header("Kelola Anggota", $_SESSION['role']);
                 if ((jenisAnggota === 'siswa' && userRole !== 'siswa') || 
                     (jenisAnggota === 'guru' && userRole !== 'guru')) {
                     e.preventDefault();
-                    alert('Role user harus sesuai dengan jenis anggota!');
+                    await customConfirm('Role user harus sesuai dengan jenis anggota!');
                     return false;
                 }
             }

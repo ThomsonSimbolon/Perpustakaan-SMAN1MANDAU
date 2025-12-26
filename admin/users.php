@@ -113,12 +113,11 @@ echo get_header("Kelola Pengguna", $_SESSION['role']);
                 <td><?php echo $user['username']; ?></td>
                 <td><?php echo ucfirst($user['role']); ?></td>
                 <td>
-                    <button class="btn btn-primary btn-sm" data-modal-target="modalAddEdit"
+                    <button class="btn btn-warning btn-sm" data-modal-target="modalAddEdit"
                         data-id="<?php echo $user['id_user']; ?>" data-username="<?php echo $user['username']; ?>"
                         data-role="<?php echo $user['role']; ?>" onclick="editUser(this)"><i class="icon-edit"></i>
                         Edit</button>
-                    <a href="users.php?delete_id=<?php echo $user['id_user']; ?>" class="btn btn-danger btn-sm"
-                        onclick="return confirm('Yakin ingin menghapus pengguna ini?');"><i class="icon-trash"></i>
+                    <a href="users.php?delete_id=<?php echo $user['id_user']; ?>" class="btn btn-danger btn-sm"><i class="icon-trash"></i>
                         Hapus</a>
                 </td>
             </tr>

@@ -93,38 +93,7 @@ echo get_header("Transaksi Pengembalian", $_SESSION['role']);
 
 <?php echo $message; ?>
 
-<style>
-.qr-tab-button {
-    padding: 10px 20px;
-    margin-right: 5px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: all 0.3s;
-}
-
-.qr-tab-button.active {
-    background-color: var(--color-primary);
-    color: #022C22;
-}
-
-.qr-tab-button:not(.active) {
-    background-color: #6c757d;
-    color: white;
-}
-
-.qr-tab-button:hover {
-    opacity: 0.8;
-}
-
-#qr-reader {
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    padding: 10px;
-    background: #f8f9fa;
-}
-</style>
+<link rel="stylesheet" href="../assets/css/pengembalian.css">
 
 <div class="card" style="margin-bottom: 20px;">
     <h3><i class="icon-camera"></i> Scan / Input QR Code</h3>
@@ -196,14 +165,13 @@ echo get_header("Transaksi Pengembalian", $_SESSION['role']);
         </table>
     </div>
 
-    <form method="POST" action="pengembalian.php" style="margin-top: 20px;">
+    <form method="POST" action="pengembalian.php" id="formPengembalian" style="margin-top: 20px;">
         <input type="hidden" name="action" value="proses_kembali">
         <input type="hidden" name="id_peminjaman" value="<?php echo $peminjaman_data['id_peminjaman']; ?>">
         <input type="hidden" name="kode_buku" value="<?php echo $peminjaman_data['kode_buku']; ?>">
         <input type="hidden" name="tanggal_kembali_harus"
             value="<?php echo $peminjaman_data['tanggal_kembali_harus']; ?>">
-        <button type="submit" class="btn btn-success"
-            onclick="return confirm('Konfirmasi proses pengembalian buku ini?');"><i class="icon-arrow-down"></i>
+        <button type="submit" class="btn btn-success" id="btnSelesaikanPengembalian"><i class="icon-arrow-down"></i>
             Selesaikan Pengembalian</button>
     </form>
 </div>
@@ -241,22 +209,54 @@ echo get_header("Transaksi Pengembalian", $_SESSION['role']);
 <script>
 let html5QrcodeScanner = null;
 
+// Deklarasikan fungsi di scope global untuk memastikan dapat diakses
 function showManualInput() {
-    document.getElementById('manualInputSection').style.display = 'block';
-    document.getElementById('cameraScanSection').style.display = 'none';
-    document.getElementById('btnTabManual').classList.add('active');
-    document.getElementById('btnTabCamera').classList.remove('active');
-    stopCameraScan();
+    try {
+        const manualSection = document.getElementById('manualInputSection');
+        const cameraSection = document.getElementById('cameraScanSection');
+        const btnManual = document.getElementById('btnTabManual');
+        const btnCamera = document.getElementById('btnTabCamera');
+        const inputField = document.getElementById('qr_data_input');
+
+        if (manualSection) manualSection.style.display = 'block';
+        if (cameraSection) cameraSection.style.display = 'none';
+        if (btnManual) btnManual.classList.add('active');
+        if (btnCamera) btnCamera.classList.remove('active');
+
+        // Fokus ke input field untuk UX yang lebih baik
+        if (inputField) {
+            setTimeout(() => inputField.focus(), 100);
+        }
+
+        stopCameraScan();
+    } catch (error) {
+        console.error('Error in showManualInput:', error);
+    }
 }
+
+// Pastikan fungsi dapat diakses dari window object
+window.showManualInput = showManualInput;
 
 function showCameraScan() {
-    document.getElementById('manualInputSection').style.display = 'none';
-    document.getElementById('cameraScanSection').style.display = 'block';
-    document.getElementById('btnTabManual').classList.remove('active');
-    document.getElementById('btnTabCamera').classList.add('active');
+    try {
+        const manualSection = document.getElementById('manualInputSection');
+        const cameraSection = document.getElementById('cameraScanSection');
+        const btnManual = document.getElementById('btnTabManual');
+        const btnCamera = document.getElementById('btnTabCamera');
 
-    startCameraScan();
+        if (manualSection) manualSection.style.display = 'none';
+        if (cameraSection) cameraSection.style.display = 'block';
+        if (btnManual) btnManual.classList.remove('active');
+        if (btnCamera) btnCamera.classList.add('active');
+
+        startCameraScan();
+    } catch (error) {
+        console.error('Error in showCameraScan:', error);
+    }
 }
+
+// Pastikan fungsi dapat diakses dari window object
+window.showCameraScan = showCameraScan;
 
 function startCameraScan() {
     const resultContainer = document.getElementById('qr-reader-results');
@@ -319,6 +319,22 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('beforeunload', function() {
         stopCameraScan();
     });
+
+    // Handle form pengembalian dengan custom confirm modal
+    const formPengembalian = document.getElementById('formPengembalian');
+    if (formPengembalian) {
+        formPengembalian.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const confirmed = await customConfirm('Konfirmasi proses pengembalian buku ini?');
+
+            if (confirmed) {
+                // User konfirmasi, submit form
+                this.submit();
+            }
+            // Jika cancel, tidak perlu melakukan apa-apa (sudah preventDefault)
+        });
+    }
 });
 </script>
 

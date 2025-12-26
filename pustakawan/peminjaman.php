@@ -137,7 +137,7 @@ echo get_header("Transaksi Peminjaman", $_SESSION['role']);
                 <td><?php echo $p['judul_buku']; ?> (<?php echo $p['kode_buku']; ?>)</td>
                 <td><?php echo $p['tanggal_pinjam']; ?></td>
                 <td><?php echo $p['tanggal_kembali_harus']; ?></td>
-                <td><span class="status-badge status-dipinjam"><?php echo $p['status']; ?></span></td>
+                <td><span class="status-badge status-aktif"><?php echo $p['status']; ?></span></td>
                 <td>
                     <a href="pengembalian.php?id_pinjam=<?php echo $p['id_peminjaman']; ?>" class="btn btn-primary btn-sm"><i class="icon-arrow-down"></i> Proses Kembali</a>
                 </td>

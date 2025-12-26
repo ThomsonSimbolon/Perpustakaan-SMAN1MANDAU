@@ -1242,13 +1242,28 @@ a:hover {
 }
 
 .status-tersedia {
-  background-color: var(--color-success);
-  color: var(--text-inverted);
+  background-color: #10B981;
+  color: #FFFFFF;
 }
 
 .status-dipinjam {
-  background-color: var(--color-danger);
-  color: var(--text-inverted);
+  background-color: #F59E0B;
+  color: #FFFFFF;
+}
+
+.status-selesai {
+  background-color: #8B5CF6;
+  color: #FFFFFF;
+}
+
+.status-aktif {
+  background-color: #3B82F6;
+  color: #FFFFFF;
+}
+
+.status-nonaktif {
+  background-color: #6B7280;
+  color: #FFFFFF;
 }
 
 /* Button Styling */
@@ -1264,6 +1279,29 @@ a:hover {
   align-items: center;
   gap: 5px;
   white-space: nowrap;
+  box-sizing: border-box;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+/* Reset untuk button dan anchor tag agar konsisten */
+button.btn,
+a.btn {
+  text-decoration: none;
+  font-family: inherit;
+  font-weight: inherit;
+  margin: 0;
+  border: none;
+  outline: none;
+}
+
+/* Pastikan button tidak memiliki default browser styling */
+button.btn-sm {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+  border: none;
 }
 
 .btn:hover {
@@ -1274,6 +1312,26 @@ a:hover {
 .btn-sm {
   padding: 6px 12px;
   font-size: 0.85em;
+  min-height: 32px;
+  height: 32px;
+  box-sizing: border-box;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+/* Pastikan button dan link memiliki height yang sama di tabel */
+.data-table td .btn-sm,
+.data-table td button.btn-sm,
+.data-table td a.btn-sm {
+  padding: 6px 12px;
+  height: 32px;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  vertical-align: middle;
+  box-sizing: border-box;
 }
 
 .btn-primary {
@@ -1293,6 +1351,16 @@ a:hover {
 .btn-success {
   background-color: var(--color-success);
   color: var(--text-inverted);
+}
+
+.btn-warning {
+  background-color: var(--color-warning);
+  color: #000000;
+}
+
+.btn-warning:hover {
+  background-color: #FBBF24;
+  opacity: 0.9;
 }
 
 .btn-secondary {

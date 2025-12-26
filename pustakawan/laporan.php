@@ -52,147 +52,7 @@ $laporan_pengembalian = $result_kembali->fetch_all(MYSQLI_ASSOC);
 echo get_header("Laporan Perpustakaan", $_SESSION['role']);
 ?>
 
-<style>
-@media print {
-    .no-print {
-        display: none !important;
-    }
-
-    .content-area {
-        padding: 0;
-    }
-
-    body {
-        background: white;
-    }
-}
-
-.filter-section {
-    background: var(--bg-card);
-    padding: 25px;
-    border-radius: var(--radius-md);
-    margin-bottom: 30px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border-color);
-}
-
-.filter-section h3 {
-    margin-bottom: 20px;
-    color: var(--color-primary);
-    font-size: 1.3em;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.filter-section h3::before {
-    content: '\f0b0';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    font-size: 1.1em;
-}
-
-.filter-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    gap: 20px;
-    align-items: flex-end;
-}
-
-.filter-form .form-group {
-    margin-bottom: 0;
-}
-
-.filter-form .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 0.95em;
-}
-
-.filter-form .form-group input[type="date"] {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    font-size: 1em;
-    background-color: var(--bg-card);
-    color: var(--text-primary);
-    transition: var(--transition-fast);
-    cursor: pointer;
-    height: 48px;
-    box-sizing: border-box;
-}
-
-.filter-form .form-group input[type="date"]:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(0, 220, 130, 0.1);
-}
-
-.filter-form .form-group input[type="date"]::-webkit-calendar-picker-indicator {
-    cursor: pointer;
-    opacity: 0.7;
-    filter: invert(0);
-}
-
-.dark .filter-form .form-group input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-    opacity: 0.8;
-}
-
-.filter-buttons {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    align-items: flex-end;
-}
-
-.filter-buttons .btn {
-    flex: 1;
-    padding: 12px 20px;
-    font-size: 0.95em;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-height: 48px;
-    height: 48px;
-    box-sizing: border-box;
-    margin: 0;
-}
-
-@media (max-width: 768px) {
-    .filter-form {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .filter-buttons {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .filter-buttons .btn {
-        flex: 1;
-    }
-}
-
-.report-section {
-    margin-bottom: 40px;
-    page-break-inside: avoid;
-}
-
-.report-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-</style>
+<link rel="stylesheet" href="../assets/css/laporan.css">
 
 <div class="no-print">
     <div class="filter-section">
@@ -267,9 +127,9 @@ echo get_header("Laporan Perpustakaan", $_SESSION['role']);
                     <td><?php echo $lp['judul_buku']; ?></td>
                     <td>
                         <?php if ($lp['status'] == 'AKTIF'): ?>
-                        <span class="status-badge status-dipinjam"><?php echo $lp['status']; ?></span>
+                        <span class="status-badge status-aktif"><?php echo $lp['status']; ?></span>
                         <?php else: ?>
-                        <span class="status-badge status-tersedia"><?php echo $lp['status']; ?></span>
+                        <span class="status-badge status-selesai"><?php echo $lp['status']; ?></span>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -335,7 +195,7 @@ echo get_header("Laporan Perpustakaan", $_SESSION['role']);
     </p>
 </div>
 
-<div class="no-print" style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+<div class="no-print report-note">
     <p><strong>Catatan:</strong> Gunakan tombol "Cetak Laporan" untuk mencetak halaman ini. Pastikan filter tanggal
         sudah diatur sesuai kebutuhan sebelum mencetak.</p>
 </div>

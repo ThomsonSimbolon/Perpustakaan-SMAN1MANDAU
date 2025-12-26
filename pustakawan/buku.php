@@ -136,7 +136,7 @@ echo get_header("Kelola Data Buku", $_SESSION['role']);
                     <?php endif; ?>
                 </td>
                 <td>
-                    <button class="btn btn-primary btn-sm" 
+                    <button class="btn btn-warning btn-sm" 
                             data-modal-target="modalAddEdit" 
                             data-kode="<?php echo htmlspecialchars($b['kode_buku']); ?>"
                             data-judul="<?php echo htmlspecialchars($b['judul']); ?>"
@@ -146,8 +146,7 @@ echo get_header("Kelola Data Buku", $_SESSION['role']);
                             data-status="<?php echo $b['status']; ?>"
                             onclick="editBuku(this)"><i class="icon-edit"></i> Edit</button>
                     <a href="buku.php?delete_id=<?php echo urlencode($b['kode_buku']); ?>" 
-                       class="btn btn-danger btn-sm" 
-                       onclick="return confirm('Yakin ingin menghapus buku ini? Pastikan buku tidak sedang dipinjam.');"><i class="icon-trash"></i> Hapus</a>
+                       class="btn btn-danger btn-sm"><i class="icon-trash"></i> Hapus</a>
                 </td>
             </tr>
             <?php endforeach; ?>

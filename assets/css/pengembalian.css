@@ -1,0 +1,32 @@
+/* CSS untuk halaman Pengembalian */
+.qr-tab-button {
+    padding: 10px 20px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s;
+}
+
+.qr-tab-button.active {
+    background-color: var(--color-primary);
+    color: #022C22;
+}
+
+.qr-tab-button:not(.active) {
+    background-color: #6c757d;
+    color: white;
+}
+
+.qr-tab-button:hover {
+    opacity: 0.8;
+}
+
+#qr-reader {
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px;
+    background: #f8f9fa;
+}
+
